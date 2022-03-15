@@ -1,4 +1,5 @@
-struct op_codes
+struct opcodes
 {
-    const unsigned int LDA = 169;
+    int opcodes[256];
+    static const unsigned int LDA = 169;
 };
