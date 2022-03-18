@@ -2,18 +2,52 @@
 
 const cpu::instruction_handler cpu::s_handlers[4][8] = {
     {
+		nullptr,
+		&cpu::bit,
+		&cpu::jmp,
+		&cpu::jmp_abs,
+		&cpu::sty,
+		&cpu::ldy,
+		&cpu::cpy,
+		&cpu::cpx
     },
     {
-        &cpu::ora,
-        &cpu::and,
+		&cpu::ora,
+		&cpu::and,
+		&cpu::eor,
+		&cpu::adc,
+		&cpu::sta,
+		&cpu::lda,
+		&cpu::cmp,
+		&cpu::sbc
     },
     {
-
+		&cpu::asl,
+		&cpu::rol,
+		&cpu::lsr,
+		&cpu::ror,
+		&cpu::stx,
+		&cpu::ldx,
+		&cpu::dec,
+		&cpu::inc
     },
     {
-
+		nullptr,
+		nullptr,
+		nullptr,
+		nullptr,
+		nullptr,
+		nullptr,
+		nullptr,
+		nullptr
     }
 };
+
+bool cpu::ora(int addrmode)
+{
+
+}
+
 
 cpu::cpu(const std::vector<u8> &data) 
     : m_registers{}
