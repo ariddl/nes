@@ -8,38 +8,6 @@ class cpu {
 	using instruction_handler = bool (cpu::*)(int addrmode);
 	static constexpr size_t stack_size = 256;
 
-	enum cc00 {
-		bit = 0b001,
-		jmp,
-		jmp_abs,
-		sty,
-		ldy,
-		cpy,
-		cpx
-	};
-
-	enum cc01 {
-		ora,
-		and,
-		eor,
-		adc,
-		sta,
-		lda,
-		cmp,
-		sbc
-	};
-
-	enum cc10 {
-		asl,
-		rol,
-		lsr,
-		ror,
-		stx,
-		ldx,
-		dec,
-		inc
-	};
-
 	enum addrmode_cc00 {
 		addrmode_cc00_immediate,
 		addrmode_cc00_zero_page,
@@ -74,9 +42,39 @@ public:
 private:
 	void reset();
 
+	// cc == 00
+	// null
+	bool bit(int addrmode);
+	bool jmp(int addrmode);
+	bool jmp_abs(int addrmode);
+	bool sty(int addrmode);
+	bool ldy(int addrmode);
+	bool cpy(int addrmode);
+	bool cpx(int addrmode);
+
+	// cc == 01
 	bool ora(int addrmode);
 	bool and(int addrmode);
+	bool eor(int addrmode);
+	bool adc(int addrmode);
+	bool sta(int addrmode);
+	bool lda(int addrmode);
+	bool cmp(int addrmode);
+	bool sbc(int addrmode);
 
+	// cc == 10
+	bool asl(int addrmode);
+	bool rol(int addrmode);
+	bool lsr(int addrmode);
+	bool ror(int addrmode);
+	bool stx(int addrmode);
+	bool ldx(int addrmode);
+	bool dec(int addrmode);
+	bool inc(int addrmode);
+
+	// cc = 11
+	// Used for 65C816 instructions, which the NES uses. 
+	// Current not worrying about it.
 	static const instruction_handler s_handlers[4][8];
 
 	struct {
