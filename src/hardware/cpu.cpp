@@ -64,10 +64,17 @@ bool cpu::execute_next() {
 		return false;
 	
 	// The instruction handler will move PC as necessary for additional bytes.
+	// Opcodes are in the format: aaabbbcc. aaa = group, bbb = addr mode, cc = group.
 	u8 opcode = m_code[m_registers.PC++];
-	return (this->*s_handlers[opcode & 0xff][opcode >> 20])((opcode >> 8) & 0xfff);
+	u8 operation = (opcode >> 5) & 0x7;
+	u8 addrmode = (opcode >> 2) & 0x7;
+	u8 tab = opcode & 0x3;
+	if (tab >= 4 || operation >= 8) // TODO: Constants!
+		return false;
+	return (this->*s_handlers[tab][operation])((opcode >> 8) & 0xfff);
 }
 
+// cc == 00
 bool cpu::bit(int addrmode) {
 	return false; // stub
 }
