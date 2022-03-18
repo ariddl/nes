@@ -71,11 +71,29 @@ bool cpu::execute_next() {
 	u8 tab = opcode & 0x3;
 	if (tab >= 4 || operation >= 8) // TODO: Constants!
 		return false;
-	return (this->*s_handlers[tab][operation])((opcode >> 8) & 0xfff);
+	return (this->*s_handlers[tab][operation])(addrmode);
 }
 
 // cc == 00
 bool cpu::bit(int addrmode) {
+	// Currently we are making the assumption that each instruction belongs to only
+	// one group and thus can only have one set of addressing modes. Need to confirm.
+	// So far it looks like this is the case.
+
+	// Each addressing mode takes its own number of cycles to process.
+	// For a full breakdown for each instruction, see:
+	// https://www.masswerk.at/6502/6502_instruction_set.html#layout
+	
+	// Timing is very important in emulation and we must be sure we are cycle-to-cycle
+	// accurate. More thought must go into this before we continue this implementation.
+	switch (addrmode) {
+		case addrmode_cc00_immediate: break;
+		case addrmode_cc00_zero_page: break;
+		case addrmode_cc00_absolute: break;
+		case addrmode_cc00_zero_page_x: break;
+		case addrmode_cc00_absolute_x: break;
+		default: break;
+	}
 	return false; // stub
 }
 
