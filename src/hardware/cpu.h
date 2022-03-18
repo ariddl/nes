@@ -41,6 +41,7 @@ public:
 
 private:
 	void reset();
+	bool execute_next();
 
 	// cc == 00
 	// null

@@ -56,6 +56,18 @@ void cpu::reset() {
     m_registers.S = stack_size - 1; // $FF
 }
 
+
+bool cpu::execute_next() {
+	// We need an actual clock.
+	// For now this will get us by to test individual instructions.
+	if (m_registers.PC >= m_code.size())
+		return false;
+	
+	// The instruction handler will move PC as necessary for additional bytes.
+	u8 opcode = m_code[m_registers.PC++];
+	return (this->*s_handlers[opcode & 0xff][opcode >> 20])((opcode >> 8) & 0xfff);
+}
+
 bool cpu::bit(int addrmode) {
 	return false; // stub
 }
