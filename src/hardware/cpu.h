@@ -2,10 +2,10 @@
 #define CPU_H
 
 #include "nes.h"
+#include <vector>
 
 class cpu {
-	using instruction_handler = bool (cpu::*)();
-
+	using instruction_handler = bool (cpu::*)(int addrmode);
 	static constexpr size_t stack_size = 256;
 
 	enum cc00 {
@@ -69,10 +69,15 @@ class cpu {
 	};
 
 public:
-	cpu();
+	cpu(const std::vector<u8> &data);
 
 private:
 	void reset();
+
+	bool ora(int addrmode);
+	bool and(int addrmode);
+
+	static const instruction_handler s_handlers[4][8];
 
 	struct {
 		// Accumulator
@@ -104,6 +109,7 @@ private:
 	} m_registers;
 
 	u8 m_stack[stack_size];
+	std::vector<u8> m_code;
 };
 
 #endif
