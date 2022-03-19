@@ -2,8 +2,9 @@
 #define CPU_H
 
 #include "nes.h"
-#include <vector>
+#include <vector> // temp
 
+class system;
 class cpu {
 	using instruction_handler = bool (cpu::*)(int addrmode);
 	static constexpr size_t stack_size = 256;
@@ -37,7 +38,7 @@ class cpu {
 	};
 
 public:
-	cpu(const std::vector<u8> &data);
+	cpu(system *sys);
 
 private:
 	void reset();
@@ -55,7 +56,7 @@ private:
 
 	// cc == 01
 	bool ora(int addrmode);
-	bool and(int addrmode);
+	bool AND(int addrmode);
 	bool eor(int addrmode);
 	bool adc(int addrmode);
 	bool sta(int addrmode);
@@ -109,6 +110,7 @@ private:
 
 	u8 m_stack[stack_size];
 	std::vector<u8> m_code;
+	system *m_system;
 };
 
 #endif

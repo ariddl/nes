@@ -1,4 +1,5 @@
 #include "cpu.h"
+#include "system.h"
 
 const cpu::instruction_handler cpu::s_handlers[4][8] = {
     {
@@ -13,7 +14,7 @@ const cpu::instruction_handler cpu::s_handlers[4][8] = {
     },
     {
 		&cpu::ora,
-		&cpu::and,
+		&cpu::AND,
 		&cpu::eor,
 		&cpu::adc,
 		&cpu::sta,
@@ -44,18 +45,16 @@ const cpu::instruction_handler cpu::s_handlers[4][8] = {
     }
 };
 
-cpu::cpu(const std::vector<u8> &data) 
+cpu::cpu(system *sys) 
     : m_registers{}
     , m_stack{}
-    , m_code(data) {
-    
+	, m_system(sys) {
 	reset();
 }
 
 void cpu::reset() {
     m_registers.S = stack_size - 1; // $FF
 }
-
 
 bool cpu::execute_next() {
 	// We need an actual clock.
@@ -126,7 +125,7 @@ bool cpu::ora(int addrmode) {
 	return false; // stub
 }
 
-bool cpu::and(int addrmode) {
+bool cpu::AND(int addrmode) {
 	return false; // stub
 }
 
