@@ -6,7 +6,7 @@
 
 class system;
 class cpu {
-	using instruction_handler = bool (cpu::*)(int addrmode);
+	using instruction_handler = bool (cpu::*)();
 	static constexpr size_t stack_size = 256;
 
 	enum addrmode_cc00 {
@@ -46,33 +46,33 @@ private:
 
 	// cc == 00
 	// null
-	bool BIT(int addrmode);
-	bool JMP(int addrmode);
-	bool JMPABS(int addrmode);
-	bool STY(int addrmode);
-	bool LDY(int addrmode);
-	bool CPY(int addrmode);
-	bool CPX(int addrmode);
+	bool BIT();
+	bool JMP();
+	bool JMPABS();
+	bool STY();
+	bool LDY();
+	bool CPY();
+	bool CPX();
 
 	// cc == 01
-	bool ORA(int addrmode);
-	bool AND(int addrmode);
-	bool EOR(int addrmode);
-	bool ADC(int addrmode);
-	bool STA(int addrmode);
-	bool LDA(int addrmode);
-	bool CMP(int addrmode);
-	bool SBC(int addrmode);
+	bool ORA();
+	bool AND();
+	bool EOR();
+	bool ADC();
+	bool STA();
+	bool LDA();
+	bool CMP();
+	bool SBC();
 
 	// cc == 10
-	bool ASL(int addrmode);
-	bool ROL(int addrmode);
-	bool LSR(int addrmode);
-	bool ROR(int addrmode);
-	bool STX(int addrmode);
-	bool LDX(int addrmode);
-	bool DEC(int addrmode);
-	bool INC(int addrmode);
+	bool ASL();
+	bool ROL();
+	bool LSR();
+	bool ROR();
+	bool STX();
+	bool LDX();
+	bool DEC();
+	bool INC();
 
 	// cc = 11
 	// Used for 65C816 instructions, which the NES uses. 

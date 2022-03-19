@@ -70,11 +70,11 @@ bool cpu::execute_next() {
 	u8 tab = opcode & 0x3;
 	if (tab >= 4 || operation >= 8) // TODO: Constants!
 		return false;
-	return (this->*s_handlers[tab][operation])(addrmode);
+	return (this->*s_handlers[tab][operation])();
 }
 
 // cc == 00
-bool cpu::BIT(int addrmode) {
+bool cpu::BIT() {
 	// Currently we are making the assumption that each instruction belongs to only
 	// one group and thus can only have one set of addressing modes. Need to confirm.
 	// So far it looks like this is the case.
@@ -85,104 +85,96 @@ bool cpu::BIT(int addrmode) {
 	
 	// Timing is very important in emulation and we must be sure we are cycle-to-cycle
 	// accurate. More thought must go into this before we continue this implementation.
-	switch (addrmode) {
-		case addrmode_cc00_immediate: break;
-		case addrmode_cc00_zero_page: break;
-		case addrmode_cc00_absolute: break;
-		case addrmode_cc00_zero_page_x: break;
-		case addrmode_cc00_absolute_x: break;
-		default: break;
-	}
 	return false; // stub
 }
 
-bool cpu::JMP(int addrmode) {
+bool cpu::JMP() {
 	return false; // stub
 }
 
-bool cpu::JMPABS(int addrmode) {
+bool cpu::JMPABS() {
 	return false; // stub
 }
 
-bool cpu::STY(int addrmode) {
+bool cpu::STY() {
 	return false; // stub
 }
 
-bool cpu::LDY(int addrmode) {
+bool cpu::LDY() {
 	return false; // stub
 }
 
-bool cpu::CPY(int addrmode) {
+bool cpu::CPY() {
 	return false; // stub
 }
 
-bool cpu::CPX(int addrmode) {
+bool cpu::CPX() {
 	return false; // stub
 }
 
 // cc == 01
-bool cpu::ORA(int addrmode) {
+bool cpu::ORA() {
 	return false; // stub
 }
 
-bool cpu::AND(int addrmode) {
+bool cpu::AND() {
 	return false; // stub
 }
 
-bool cpu::EOR(int addrmode) {
+bool cpu::EOR() {
 	return false; // stub
 }
 
-bool cpu::ADC(int addrmode) {
+bool cpu::ADC() {
 	return false; // stub
 }
 
-bool cpu::STA(int addrmode) {
+bool cpu::STA() {
 	return false; // stub
 }
 
-bool cpu::LDA(int addrmode) {
+bool cpu::LDA() {
 	return false; // stub
 }
 
-bool cpu::CMP(int addrmode) {
+bool cpu::CMP() {
 	return false; // stub
 }
 
-bool cpu::SBC(int addrmode) {
+bool cpu::SBC() {
 	return false; // stub
 }
 
 
 // cc == 10
-bool cpu::ASL(int addrmode) {
+bool cpu::ASL() {
 	return false; // stub
 }
 
-bool cpu::ROL(int addrmode) {
+bool cpu::ROL() {
 	return false; // stub
 }
 
-bool cpu::LSR(int addrmode) {
+bool cpu::LSR() {
 	return false; // stub
 }
 
-bool cpu::ROR(int addrmode) {
+bool cpu::ROR() {
 	return false; // stub
 }
 
-bool cpu::STX(int addrmode) {
+bool cpu::STX() {
 	return false; // stub
 }
 
-bool cpu::LDX(int addrmode) {
+bool cpu::LDX() {
 	return false; // stub
 }
 
-bool cpu::DEC(int addrmode) {
+bool cpu::DEC() {
 	return false; // stub
 }
 
-bool cpu::INC(int addrmode) {
+bool cpu::INC() {
 	return false; // stub
 }
