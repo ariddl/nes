@@ -12,7 +12,7 @@ class cpu {
 
 	struct instruction {
 		const char *name;
-		instruction_handler *handler;
+		instruction_handler handler;
 		u8 cycles;
 	};
 
@@ -20,6 +20,11 @@ class cpu {
 		const char *name;
 		addrmode_handler handler;
 		u8 cycles;
+	};
+
+	struct group {
+		instruction instructions[8];
+		addrmode addressing_modes[8];
 	};
 
 	enum addrmode_cc00 {
@@ -99,7 +104,7 @@ private:
 	// cc = 11
 	// Used for 65C816 instructions, which the NES uses. 
 	// Current not worrying about it.
-	static const instruction_handler s_handlers[4][8];
+	static const group s_handlers[4];
 
 	struct {
 		// Accumulator

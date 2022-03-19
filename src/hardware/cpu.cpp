@@ -1,48 +1,53 @@
 #include "cpu.h"
 #include "system.h"
 
-const cpu::instruction_handler cpu::s_handlers[4][8] = {
+// TODO: Find number of cycles per instruction.
+const cpu::group cpu::s_handlers[4] = {
     {
-		nullptr,
-		&cpu::BIT,
-		&cpu::JMP,
-		&cpu::JMPABS,
-		&cpu::STY,
-		&cpu::LDY,
-		&cpu::CPY,
-		&cpu::CPX
+		{
+			{"UNK", nullptr,   0}, {"BIT",    &cpu::BIT,    0}, 
+			{"JMP", &cpu::JMP, 0}, {"JMPABS", &cpu::JMPABS, 0},
+			{"STY", &cpu::STY, 0}, {"LDY",    &cpu::LDY,    0},
+			{"CPY", &cpu::CPY, 0}, {"CPX",    &cpu::CPX,    0}
+		},
+		{
+
+		}
     },
-    {
-		&cpu::ORA,
-		&cpu::AND,
-		&cpu::EOR,
-		&cpu::ADC,
-		&cpu::STA,
-		&cpu::LDA,
-		&cpu::CMP,
-		&cpu::SBC
-    },
-    {
-		&cpu::ASL,
-		&cpu::ROL,
-		&cpu::LSR,
-		&cpu::ROR,
-		&cpu::STX,
-		&cpu::LDX,
-		&cpu::DEC,
-		&cpu::INC
-    },
-    {
-		// TODO: NES Specific instructions?
-		nullptr,
-		nullptr,
-		nullptr,
-		nullptr,
-		nullptr,
-		nullptr,
-		nullptr,
-		nullptr
-    }
+	{
+		{
+			{"ORA", &cpu::ORA, 0}, {"AND", &cpu::AND, 0},
+			{"EOR", &cpu::EOR, 0}, {"ADC", &cpu::ADC, 0},
+			{"STA", &cpu::STA, 0}, {"LDA", &cpu::LDA, 0},
+			{"CMP", &cpu::CMP, 0}, {"SBC", &cpu::SBC, 0}
+		},
+		{
+
+		}
+	},
+	{
+		{
+			{"ASL", &cpu::ASL, 0}, {"ROL", &cpu::ROL, 0},
+			{"LSR", &cpu::LSR, 0}, {"ROR", &cpu::ROR, 0},
+			{"STX", &cpu::STX, 0}, {"LDX", &cpu::LDX, 0},
+			{"DEC", &cpu::DEC, 0}, {"INC", &cpu::INC, 0},
+		},
+		{
+
+		}
+	},
+	{
+		{
+			// TODO: NES Specific instructions?
+			{"UNK", nullptr, 0}, {"UNK", nullptr, 0},
+			{"UNK", nullptr, 0}, {"UNK", nullptr, 0},
+			{"UNK", nullptr, 0}, {"UNK", nullptr, 0},
+			{"UNK", nullptr, 0}, {"UNK", nullptr, 0},
+		},
+		{
+
+		}
+	}
 };
 
 cpu::cpu(system *sys) 
@@ -70,7 +75,11 @@ bool cpu::execute_next() {
 	u8 tab = opcode & 0x3;
 	if (tab >= 4 || operation >= 8) // TODO: Constants!
 		return false;
-	return (this->*s_handlers[tab][operation])();
+	
+	// TODO: Account for cycles from these addressing mode and instruction overhead.
+	const group &g = s_handlers[tab];
+	(this->*g.addressing_modes[addrmode].handler)();
+	return (this->*g.instructions[operation].handler)();
 }
 
 // cc == 00
