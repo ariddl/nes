@@ -1,5 +1,5 @@
 #include "ines.h"
-#include <fstream.>
+#include <fstream>
 
 bool ines::load(const std::string &file) {
 	return false;

@@ -8,4 +8,4 @@ public:
 	bool load(const std::string &file); 
 };
 
-#endif INES_H
+#endif
