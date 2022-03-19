@@ -3,6 +3,7 @@
 
 // TODO: Find number of cycles per instruction.
 const cpu::group cpu::s_handlers[4] = {
+	// cc == 00
     {
 		{
 			{"UNK", nullptr,   0}, {"BIT",    &cpu::BIT,    0}, 
@@ -11,9 +12,13 @@ const cpu::group cpu::s_handlers[4] = {
 			{"CPY", &cpu::CPY, 0}, {"CPX",    &cpu::CPX,    0}
 		},
 		{
-
+			{"IMM", &cpu::IMM, 0}, {"ZP",  &cpu::ZP,  0},
+			{"UNK", nullptr,   0}, {"ABS", &cpu::ABS, 0}, 
+			{"UNK", nullptr,   0}, {"ZPX", &cpu::ZPX, 0},
+			{"UNK", nullptr,   0}, {"ABX", &cpu::ABX, 0}
 		}
     },
+	// cc == 01
 	{
 		{
 			{"ORA", &cpu::ORA, 0}, {"AND", &cpu::AND, 0},
@@ -22,9 +27,9 @@ const cpu::group cpu::s_handlers[4] = {
 			{"CMP", &cpu::CMP, 0}, {"SBC", &cpu::SBC, 0}
 		},
 		{
-
 		}
 	},
+	// cc == 10
 	{
 		{
 			{"ASL", &cpu::ASL, 0}, {"ROL", &cpu::ROL, 0},
@@ -33,9 +38,13 @@ const cpu::group cpu::s_handlers[4] = {
 			{"DEC", &cpu::DEC, 0}, {"INC", &cpu::INC, 0},
 		},
 		{
-
+			{"IMM", &cpu::IMM, 0}, {"ZP",  &cpu::ZP,  0},
+			{"ACC", &cpu::ACC, 0}, {"ABS", &cpu::ABS, 0}, 
+			{"UNK", nullptr,   0}, {"ZPX", &cpu::ZPX, 0},
+			{"ABX", &cpu::ABX, 0}
 		}
 	},
+	// cc == 11
 	{
 		{
 			// TODO: NES Specific instructions?
@@ -45,7 +54,6 @@ const cpu::group cpu::s_handlers[4] = {
 			{"UNK", nullptr, 0}, {"UNK", nullptr, 0},
 		},
 		{
-
 		}
 	}
 };
