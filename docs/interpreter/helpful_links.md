@@ -5,3 +5,5 @@
 3. https://sites.google.com/site/6502asembly/
 4. https://masswerk.at/6502/disassembler.html
 5. https://llx.com/Neil/a2/opcodes.html
+6. https://gist.github.com/adamveld12/d0398717145a2c8dedab
+7. https://yizhang82.dev/nes-emu-main-loop
