@@ -2,6 +2,8 @@
 #define SYSTEM_H
 
 #include "cpu.h"
+#include "ppu.h"
+#include "apu.h"
 
 // This will house the bus, the data stream allowing the
 // various components to communicate. We must consider how
@@ -13,7 +15,9 @@ public:
     system();
 
 private:
-    cpu m_cpu;
+    cpu m_cpu; // cpu
+    ppu m_ppu; // gfx
+    apu m_apu; // audio
 };
 
 #endif

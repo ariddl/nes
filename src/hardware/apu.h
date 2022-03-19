@@ -1,10 +1,10 @@
-#ifndef PPU_H
-#define PPU_H
+#ifndef APU_H
+#define APU_H
 
 class system;
-class ppu {
+class apu {
 public:
-    ppu(system *sys);
+    apu(system *sys);
 
 private:
     system *m_system;

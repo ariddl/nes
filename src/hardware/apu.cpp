@@ -1,7 +1,7 @@
-#include "ppu.h"
+#include "apu.h"
 #include "system.h"
 
-ppu::ppu(system *sys)
+apu::apu(system *sys)
     : m_system(sys) {
     
 }
