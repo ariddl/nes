@@ -7,7 +7,20 @@
 class system;
 class cpu {
 	using instruction_handler = bool (cpu::*)();
+	using addrmode_handler = void (cpu::*)();
 	static constexpr size_t stack_size = 256;
+
+	struct instruction {
+		const char *name;
+		instruction_handler *handler;
+		u8 cycles;
+	};
+
+	struct addrmode {
+		const char *name;
+		addrmode_handler handler;
+		u8 cycles;
+	};
 
 	enum addrmode_cc00 {
 		addrmode_cc00_immediate,
@@ -43,6 +56,15 @@ public:
 private:
 	void reset();
 	bool execute_next();
+
+	void IMM();
+	void ZP();
+	void ABS();
+	void ZPX();
+	void ABX();
+	void ABY();
+	void ZPY();
+	void ACC();
 
 	// cc == 00
 	// null
