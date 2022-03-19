@@ -4,33 +4,33 @@
 const cpu::instruction_handler cpu::s_handlers[4][8] = {
     {
 		nullptr,
-		&cpu::bit,
-		&cpu::jmp,
-		&cpu::jmp_abs,
-		&cpu::sty,
-		&cpu::ldy,
-		&cpu::cpy,
-		&cpu::cpx
+		&cpu::BIT,
+		&cpu::JMP,
+		&cpu::JMPABS,
+		&cpu::STY,
+		&cpu::LDY,
+		&cpu::CPY,
+		&cpu::CPX
     },
     {
-		&cpu::ora,
+		&cpu::ORA,
 		&cpu::AND,
-		&cpu::eor,
-		&cpu::adc,
-		&cpu::sta,
-		&cpu::lda,
-		&cpu::cmp,
-		&cpu::sbc
+		&cpu::EOR,
+		&cpu::ADC,
+		&cpu::STA,
+		&cpu::LDA,
+		&cpu::CMP,
+		&cpu::SBC
     },
     {
-		&cpu::asl,
-		&cpu::rol,
-		&cpu::lsr,
-		&cpu::ror,
-		&cpu::stx,
-		&cpu::ldx,
-		&cpu::dec,
-		&cpu::inc
+		&cpu::ASL,
+		&cpu::ROL,
+		&cpu::LSR,
+		&cpu::ROR,
+		&cpu::STX,
+		&cpu::LDX,
+		&cpu::DEC,
+		&cpu::INC
     },
     {
 		// TODO: NES Specific instructions?
@@ -74,7 +74,7 @@ bool cpu::execute_next() {
 }
 
 // cc == 00
-bool cpu::bit(int addrmode) {
+bool cpu::BIT(int addrmode) {
 	// Currently we are making the assumption that each instruction belongs to only
 	// one group and thus can only have one set of addressing modes. Need to confirm.
 	// So far it looks like this is the case.
@@ -96,32 +96,32 @@ bool cpu::bit(int addrmode) {
 	return false; // stub
 }
 
-bool cpu::jmp(int addrmode) {
+bool cpu::JMP(int addrmode) {
 	return false; // stub
 }
 
-bool cpu::jmp_abs(int addrmode) {
+bool cpu::JMPABS(int addrmode) {
 	return false; // stub
 }
 
-bool cpu::sty(int addrmode) {
+bool cpu::STY(int addrmode) {
 	return false; // stub
 }
 
-bool cpu::ldy(int addrmode) {
+bool cpu::LDY(int addrmode) {
 	return false; // stub
 }
 
-bool cpu::cpy(int addrmode) {
+bool cpu::CPY(int addrmode) {
 	return false; // stub
 }
 
-bool cpu::cpx(int addrmode) {
+bool cpu::CPX(int addrmode) {
 	return false; // stub
 }
 
 // cc == 01
-bool cpu::ora(int addrmode) {
+bool cpu::ORA(int addrmode) {
 	return false; // stub
 }
 
@@ -129,60 +129,60 @@ bool cpu::AND(int addrmode) {
 	return false; // stub
 }
 
-bool cpu::eor(int addrmode) {
+bool cpu::EOR(int addrmode) {
 	return false; // stub
 }
 
-bool cpu::adc(int addrmode) {
+bool cpu::ADC(int addrmode) {
 	return false; // stub
 }
 
-bool cpu::sta(int addrmode) {
+bool cpu::STA(int addrmode) {
 	return false; // stub
 }
 
-bool cpu::lda(int addrmode) {
+bool cpu::LDA(int addrmode) {
 	return false; // stub
 }
 
-bool cpu::cmp(int addrmode) {
+bool cpu::CMP(int addrmode) {
 	return false; // stub
 }
 
-bool cpu::sbc(int addrmode) {
+bool cpu::SBC(int addrmode) {
 	return false; // stub
 }
 
 
 // cc == 10
-bool cpu::asl(int addrmode) {
+bool cpu::ASL(int addrmode) {
 	return false; // stub
 }
 
-bool cpu::rol(int addrmode) {
+bool cpu::ROL(int addrmode) {
 	return false; // stub
 }
 
-bool cpu::lsr(int addrmode) {
+bool cpu::LSR(int addrmode) {
 	return false; // stub
 }
 
-bool cpu::ror(int addrmode) {
+bool cpu::ROR(int addrmode) {
 	return false; // stub
 }
 
-bool cpu::stx(int addrmode) {
+bool cpu::STX(int addrmode) {
 	return false; // stub
 }
 
-bool cpu::ldx(int addrmode) {
+bool cpu::LDX(int addrmode) {
 	return false; // stub
 }
 
-bool cpu::dec(int addrmode) {
+bool cpu::DEC(int addrmode) {
 	return false; // stub
 }
 
-bool cpu::inc(int addrmode) {
+bool cpu::INC(int addrmode) {
 	return false; // stub
 }

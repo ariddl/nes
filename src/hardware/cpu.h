@@ -46,33 +46,33 @@ private:
 
 	// cc == 00
 	// null
-	bool bit(int addrmode);
-	bool jmp(int addrmode);
-	bool jmp_abs(int addrmode);
-	bool sty(int addrmode);
-	bool ldy(int addrmode);
-	bool cpy(int addrmode);
-	bool cpx(int addrmode);
+	bool BIT(int addrmode);
+	bool JMP(int addrmode);
+	bool JMPABS(int addrmode);
+	bool STY(int addrmode);
+	bool LDY(int addrmode);
+	bool CPY(int addrmode);
+	bool CPX(int addrmode);
 
 	// cc == 01
-	bool ora(int addrmode);
+	bool ORA(int addrmode);
 	bool AND(int addrmode);
-	bool eor(int addrmode);
-	bool adc(int addrmode);
-	bool sta(int addrmode);
-	bool lda(int addrmode);
-	bool cmp(int addrmode);
-	bool sbc(int addrmode);
+	bool EOR(int addrmode);
+	bool ADC(int addrmode);
+	bool STA(int addrmode);
+	bool LDA(int addrmode);
+	bool CMP(int addrmode);
+	bool SBC(int addrmode);
 
 	// cc == 10
-	bool asl(int addrmode);
-	bool rol(int addrmode);
-	bool lsr(int addrmode);
-	bool ror(int addrmode);
-	bool stx(int addrmode);
-	bool ldx(int addrmode);
-	bool dec(int addrmode);
-	bool inc(int addrmode);
+	bool ASL(int addrmode);
+	bool ROL(int addrmode);
+	bool LSR(int addrmode);
+	bool ROR(int addrmode);
+	bool STX(int addrmode);
+	bool LDX(int addrmode);
+	bool DEC(int addrmode);
+	bool INC(int addrmode);
 
 	// cc = 11
 	// Used for 65C816 instructions, which the NES uses. 
