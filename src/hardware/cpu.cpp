@@ -27,6 +27,10 @@ const cpu::group cpu::s_handlers[4] = {
 			{"CMP", &cpu::CMP, 0}, {"SBC", &cpu::SBC, 0}
 		},
 		{
+			{"IDZPX", &cpu::IDZPX, 0}, {"IDZPY",  &cpu::IDZPY, 0},
+			{"ZP", &cpu::ZP,       0}, {"ZPX", &cpu::ZPX,      0}, 
+			{"IMM", &cpu::IMM,     0}, {"ABY", &cpu::ABY,      0},
+			{"ABS", &cpu::ABS,     0}, {"ABX", &cpu::ABX,      0}
 		}
 	},
 	// cc == 10
@@ -41,7 +45,7 @@ const cpu::group cpu::s_handlers[4] = {
 			{"IMM", &cpu::IMM, 0}, {"ZP",  &cpu::ZP,  0},
 			{"ACC", &cpu::ACC, 0}, {"ABS", &cpu::ABS, 0}, 
 			{"UNK", nullptr,   0}, {"ZPX", &cpu::ZPX, 0},
-			{"ABX", &cpu::ABX, 0}
+			{"ABX", &cpu::ABX, 0}, {"UNK", nullptr,   0}
 		}
 	},
 	// cc == 11
@@ -54,6 +58,10 @@ const cpu::group cpu::s_handlers[4] = {
 			{"UNK", nullptr, 0}, {"UNK", nullptr, 0},
 		},
 		{
+			{"UNK", nullptr, 0}, {"UNK", nullptr, 0},
+			{"UNK", nullptr, 0}, {"UNK", nullptr, 0},
+			{"UNK", nullptr, 0}, {"UNK", nullptr, 0},
+			{"UNK", nullptr, 0}, {"UNK", nullptr, 0},
 		}
 	}
 };
@@ -70,13 +78,14 @@ void cpu::reset() {
 }
 
 bool cpu::execute_next() {
-	// We need an actual clock.
-	// For now this will get us by to test individual instructions.
+	// We need an actual clock. For now this will get us by to test individual
+	// instructions.
 	if (m_registers.PC >= m_code.size())
 		return false;
 	
 	// The instruction handler will move PC as necessary for additional bytes.
-	// Opcodes are in the format: aaabbbcc. aaa = group, bbb = addr mode, cc = group.
+	// Opcodes are in the format: aaabbbcc. aaa = group, bbb = addr mode, cc =
+	// group.
 	u8 opcode = m_code[m_registers.PC++];
 	u8 operation = (opcode >> 5) & 0x7;
 	u8 addrmode = (opcode >> 2) & 0x7;
@@ -84,7 +93,8 @@ bool cpu::execute_next() {
 	if (tab >= 4 || operation >= 8) // TODO: Constants!
 		return false;
 	
-	// TODO: Account for cycles from these addressing mode and instruction overhead.
+	// TODO: Account for cycles from these addressing mode and instruction
+	// overhead.
 	const group &g = s_handlers[tab];
 	(this->*g.addressing_modes[addrmode].handler)();
 	return (this->*g.instructions[operation].handler)();
@@ -92,16 +102,17 @@ bool cpu::execute_next() {
 
 // cc == 00
 bool cpu::BIT() {
-	// Currently we are making the assumption that each instruction belongs to only
-	// one group and thus can only have one set of addressing modes. Need to confirm.
-	// So far it looks like this is the case.
+	// Currently we are making the assumption that each instruction belongs to
+	// only one group and thus can only have one set of addressing modes. Need
+	// to confirm. So far it looks like this is the case.
 
-	// Each addressing mode takes its own number of cycles to process.
-	// For a full breakdown for each instruction, see:
+	// Each addressing mode takes its own number of cycles to process. For a
+	// full breakdown for each instruction, see:
 	// https://www.masswerk.at/6502/6502_instruction_set.html#layout
 	
-	// Timing is very important in emulation and we must be sure we are cycle-to-cycle
-	// accurate. More thought must go into this before we continue this implementation.
+	// Timing is very important in emulation and we must be sure we are
+	// cycle-to-cycle accurate. More thought must go into this before we
+	// continue this implementation.
 	return false; // stub
 }
 

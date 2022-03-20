@@ -35,7 +35,7 @@ class cpu {
 		addrmode_cc00_absolute_x = 0b111
 	};
 
-	enum addrmode_cc01 {
+	enum addrmode_cc01 {	
 		addrmode_cc01_zeropage_x,
 		addrmode_cc01_zeropage,
 		addrmode_cc01_immediate,
