@@ -28,9 +28,9 @@ const cpu::group cpu::s_handlers[4] = {
 		},
 		{
 			{"IDZPX", &cpu::IDZPX, 0}, {"IDZPY",  &cpu::IDZPY, 0},
-			{"ZP", &cpu::ZP,       0}, {"ZPX", &cpu::ZPX,      0}, 
-			{"IMM", &cpu::IMM,     0}, {"ABY", &cpu::ABY,      0},
-			{"ABS", &cpu::ABS,     0}, {"ABX", &cpu::ABX,      0}
+			{"ZP",    &cpu::ZP,    0}, {"ZPX",    &cpu::ZPX,   0}, 
+			{"IMM",   &cpu::IMM,   0}, {"ABY",    &cpu::ABY,   0},
+			{"ABS",   &cpu::ABS,   0}, {"ABX",    &cpu::ABX,   0}
 		}
 	},
 	// cc == 10
