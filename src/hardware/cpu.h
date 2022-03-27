@@ -70,6 +70,8 @@ private:
 	void ABY();
 	void ZPY();
 	void ACC();
+	void IDZPX();
+	void IDZPY();
 
 	// cc == 00
 	// null
