@@ -100,19 +100,61 @@ bool cpu::execute_next() {
 	return (this->*g.instructions[operation].handler)();
 }
 
+// Currently we are making the assumption that each instruction belongs to only
+// one group and thus can only have one set of addressing modes. Need to
+// confirm. So far it looks like this is the case.
+
+// Each addressing mode takes its own number of cycles to process. For a full
+// breakdown for each instruction, see:
+// https://www.masswerk.at/6502/6502_instruction_set.html#layout
+
+// Timing is very important in emulation and we must be sure we are
+// cycle-to-cycle accurate. More thought must go into this before we continue
+// this implementation.
+
+// Addressing modes: 
+void IMM() {
+	// not implemented
+}
+
+void ZP() {
+	// not implemented
+}
+
+void ABS(){
+	// not implemented
+}
+
+void ZPX(){
+	// not implemented
+}
+
+void ABX(){
+	// not implemented
+}
+
+void ABY(){
+	// not implemented
+}
+
+void ZPY(){
+	// not implemented
+}
+
+void ACC(){
+	// not implemented
+}
+
+void IDZPX(){
+	// not implemented
+}
+
+void IDZPY(){
+	// not implemented
+}
+
 // cc == 00
 bool cpu::BIT() {
-	// Currently we are making the assumption that each instruction belongs to
-	// only one group and thus can only have one set of addressing modes. Need
-	// to confirm. So far it looks like this is the case.
-
-	// Each addressing mode takes its own number of cycles to process. For a
-	// full breakdown for each instruction, see:
-	// https://www.masswerk.at/6502/6502_instruction_set.html#layout
-	
-	// Timing is very important in emulation and we must be sure we are
-	// cycle-to-cycle accurate. More thought must go into this before we
-	// continue this implementation.
 	return false; // stub
 }
 

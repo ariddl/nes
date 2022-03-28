@@ -47,7 +47,7 @@ const char* filename = *(argv + 1);
 
     // ...buffer contains the entire file...
     std::cout << length  << std::endl;
-    std::cout << std::hex << (int)buffer[0] << std::endl;
+    std::cout <<  (int)buffer[0] + 256 << std::endl;
     delete[] buffer;
   }
 

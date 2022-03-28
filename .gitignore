@@ -33,3 +33,11 @@
 
 build/
 *.nes
+
+# Cmake (Not sure if should be ignored)
+*.make
+CMakeFiles
+*.cmake
+*.marks
+Makefile
+CMakeCache.txt
