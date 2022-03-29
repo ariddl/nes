@@ -1,3 +1,5 @@
 if (WINDOWS)
   add_subdirectory(win)
+elseif(UNIX)
+  add_subdirectory(unix)
 endif()
