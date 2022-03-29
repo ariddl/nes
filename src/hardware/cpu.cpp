@@ -113,43 +113,43 @@ bool cpu::execute_next() {
 // this implementation.
 
 // Addressing modes: 
-void IMM() {
+void cpu::IMM() {
 	// not implemented
 }
 
-void ZP() {
+void cpu::ZP() {
 	// not implemented
 }
 
-void ABS(){
+void cpu::ABS(){
 	// not implemented
 }
 
-void ZPX(){
+void cpu::ZPX(){
 	// not implemented
 }
 
-void ABX(){
+void cpu::ABX(){
 	// not implemented
 }
 
-void ABY(){
+void cpu::ABY(){
 	// not implemented
 }
 
-void ZPY(){
+void cpu::ZPY(){
 	// not implemented
 }
 
-void ACC(){
+void cpu::ACC(){
 	// not implemented
 }
 
-void IDZPX(){
+void cpu::IDZPX(){
 	// not implemented
 }
 
-void IDZPY(){
+void cpu::IDZPY(){
 	// not implemented
 }
 
