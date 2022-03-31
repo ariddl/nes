@@ -7,3 +7,5 @@
 5. https://llx.com/Neil/a2/opcodes.html
 6. https://gist.github.com/adamveld12/d0398717145a2c8dedab
 7. https://yizhang82.dev/nes-emu-main-loop
+8. https://slark.me/c64-downloads/6502-addressing-modes.pdf
+

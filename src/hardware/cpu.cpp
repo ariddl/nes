@@ -125,47 +125,63 @@ void cpu::ZP() {
 
 void cpu::ABS() {
 	// For JMP the PC is set to address: u16 address = (byte1 << 8) + byte2; 
-	u8 byte1 = m_code[m_registers.PC + 2];
-	u8 byte2 = m_code[m_registers.PC + 1];
-	instr_arg = memory[byte1][byte2];
+	u8 byte1 = m_code[m_registers.PC + 1];
+	u8 byte2 = m_code[m_registers.PC + 2];
+	instr_arg = memory[byte2][byte1];
 }
 
 void cpu::ZPX() {
-	// not implemented
+	u8 contents = m_registers.X;
+	u8 byte = m_code[m_registers.PC + 1];
+	u8 address = byte + contents;
+	instr_arg = memory[0][address];
 }
 
 void cpu::ABX() {
 	u8 contents = m_registers.Y;
-	u8 byte1 = m_code[m_registers.PC + 2];
-	u8 byte2 = m_code[m_registers.PC + 1];
-	u16 address = ((byte1 << 8) + byte2) + contents;
+	u8 byte1 = m_code[m_registers.PC + 1];
+	u8 byte2 = m_code[m_registers.PC + 2];
+	u16 address = ((byte2 << 8) + byte1) + contents;
 	instr_arg = memory[address >> 8][address << 8];
 }
 
-void cpu::ABY(){
+void cpu::ABY() {
 	u8 contents = m_registers.X;
-	u8 byte1 = m_code[m_registers.PC + 2];
-	u8 byte2 = m_code[m_registers.PC + 1];
-	u16 address = ((byte1 << 8) + byte2) + contents;
+	u8 byte1 = m_code[m_registers.PC + 1];
+	u8 byte2 = m_code[m_registers.PC + 2];
+	u16 address = ((byte2 << 8) + byte1) + contents;
 	instr_arg = memory[address >> 8][address << 8];
 
 }
 
-void cpu::ZPY(){
-	// not implemented
+void cpu::ZPY() {
+	u8 contents = m_registers.Y;
+	u8 byte = m_code[m_registers.PC + 1];
+	u8 address = byte + contents; // must be u8 because 00xx
+	instr_arg = memory[0][address];
 }
 
-void cpu::ACC(){
+void cpu::ACC() {
 	u8 contents = m_registers.A;
 	instr_arg = contents;
 }
 
-void cpu::IDZPX(){
-	// not implemented
+void cpu::IDZPX() {
+	u8 contents = m_registers.X;
+	u8 byte = m_code[m_registers.PC + 1];
+	u8 z_address = contents + byte;
+	u8 address_byte1 = memory[0][z_address];
+	u8 address_byte2 = memory[0][z_address + 1];
+	instr_arg = memory[address_byte2][address_byte1];
 }
 
-void cpu::IDZPY(){
-	// not implemented
+void cpu::IDZPY() {
+	u8 contents = m_registers.Y;
+	u8 byte = m_code[m_registers.PC + 1];
+	u8 address_byte1 = memory[0][byte];
+	u8 address_byte2 = memory[0][byte + 1];
+	u16 address = ((address_byte2 << 8) + address_byte1) + contents;
+	instr_arg = memory[address >> 8][address << 8];
 }
 
 // cc == 00
