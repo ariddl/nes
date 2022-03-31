@@ -117,7 +117,7 @@ private:
 	u8 memory[page_count][page_size];
 	u8* zero_page = memory[0];
 	u8* m_stack = memory[1];
-	u16 instr_address;
+	u16 instr_arg;
 
 	std::vector<u8> m_code;
 	system *m_system;

@@ -114,27 +114,41 @@ bool cpu::execute_next() {
 
 // Addressing modes: 
 void cpu::IMM() {
-	// not implemented
+	u8 immediate = m_code[m_registers.PC + 1];
+	instr_arg = immediate;
 }
 
 void cpu::ZP() {
+	u8 address = m_code[m_registers.PC + 1];
+	instr_arg = memory[0][address];
+}
+
+void cpu::ABS() {
+	// For JMP the PC is set to address: u16 address = (byte1 << 8) + byte2; 
+	u8 byte1 = m_code[m_registers.PC + 2];
+	u8 byte2 = m_code[m_registers.PC + 1];
+	instr_arg = memory[byte1][byte2];
+}
+
+void cpu::ZPX() {
 	// not implemented
 }
 
-void cpu::ABS(){
-	// not implemented
-}
-
-void cpu::ZPX(){
-	// not implemented
-}
-
-void cpu::ABX(){
-	// not implemented
+void cpu::ABX() {
+	u8 contents = m_registers.Y;
+	u8 byte1 = m_code[m_registers.PC + 2];
+	u8 byte2 = m_code[m_registers.PC + 1];
+	u16 address = ((byte1 << 8) + byte2) + contents;
+	instr_arg = memory[address >> 8][address << 8];
 }
 
 void cpu::ABY(){
-	// not implemented
+	u8 contents = m_registers.X;
+	u8 byte1 = m_code[m_registers.PC + 2];
+	u8 byte2 = m_code[m_registers.PC + 1];
+	u16 address = ((byte1 << 8) + byte2) + contents;
+	instr_arg = memory[address >> 8][address << 8];
+
 }
 
 void cpu::ZPY(){
@@ -142,7 +156,8 @@ void cpu::ZPY(){
 }
 
 void cpu::ACC(){
-	// not implemented
+	u8 contents = m_registers.A;
+	instr_arg = contents;
 }
 
 void cpu::IDZPX(){
