@@ -101,16 +101,16 @@ private:
 		// Status
 		union {
 			struct {
-				u8 negative : 1;
-				u8 overflow : 1;
-				u8 unused : 2;
-				u8 decimal : 1;
-				u8 interrupt_disable : 1;
-				u8 zero : 1;
-				u8 carry : 1;
+				u8 N : 1; // Negative
+				u8 V : 1; // Overflow
+				u8 U : 2; // Unused
+				u8 D : 1; // Decimal
+				u8 I : 1; // Interrupt disable
+				u8 Z : 1; // Zero
+				u8 C : 1; // Carry 
 			};
-			u8 flags;
-		} status;
+			u8 flags; // Flags
+		} status; // Status
 	} m_registers;
 
 

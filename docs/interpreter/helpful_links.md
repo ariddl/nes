@@ -8,4 +8,6 @@
 6. https://gist.github.com/adamveld12/d0398717145a2c8dedab
 7. https://yizhang82.dev/nes-emu-main-loop
 8. https://slark.me/c64-downloads/6502-addressing-modes.pdf
+9. https://www.pagetable.com/c64ref/6502/?cpu=65ce02&tab=2#
+
 
