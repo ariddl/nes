@@ -74,6 +74,12 @@ cpu::cpu(system *sys)
 }
 
 void cpu::reset() {
+	// We need the reset vector to start executing instructions.
+	// Note that the PPU is needed for any games to run instructions
+	// since the game will wait for the PPU to be ready first.
+	
+	// When the CPU boots up, it reads the Reset vector, located at FFFC. 
+	// That contains a 16-bit value which tells the CPU where to jump to.
     m_registers.S = stack_size - 1; // $FF
 }
 

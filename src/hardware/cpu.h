@@ -13,7 +13,6 @@ class cpu {
 	static constexpr size_t page_count = memory_size/page_size;
 	static constexpr size_t stack_size = page_size;
 
-
 	struct instruction {
 		const char *name;
 		instruction_handler handler;
@@ -113,12 +112,20 @@ private:
 		} status;
 	} m_registers;
 
-
-
 	// Memory
 	u8 memory[page_count][page_size];
-	u8* memory_map[256];
 	u16 instr_arg;
+
+	/*
+		0000-07FF is RAM, 0800-1FFF are mirrors of RAM (you AND the address with 07FF to get the effective address)
+		2000-2007 is how the CPU writes to the PPU, 2008-3FFF are mirrors of that address range.
+		4000-401F is for IO ports and sound
+		4020-4FFF is rarely used, but can be used by some cartridges
+		5000-5FFF is rarely used, but can be used by some cartridges, often as bank switching registers, not actual memory, but some cartridges put RAM there
+		6000-7FFF is often cartridge WRAM. Since emulators usually emulate this whether it actually exists in the cartridge or not, there's a little bit of controversy about NES headers not adequately representing a cartridge.
+		8000-FFFF is the main area the cartridge ROM is mapped to in memory. Sometimes it can be bank switched, usually in 32k, 16k, or 8k sized banks.
+	*/
+	u8* memory_map[256];
 
 	system *m_system;
 };
