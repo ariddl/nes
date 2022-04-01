@@ -8,7 +8,7 @@ class system;
 class cpu {
 	using instruction_handler = bool (cpu::*)();
 	using addrmode_handler = void (cpu::*)();
-	static constexpr size_t memory_size = 2048;
+	static constexpr size_t memory_size = 32768;
 	static constexpr size_t page_size = 256;
 	static constexpr size_t page_count = memory_size/page_size;
 	static constexpr size_t stack_size = page_size;
@@ -79,6 +79,8 @@ private:
 	bool LDX();
 	bool DEC();
 	bool INC();
+
+	u8 get_byte(u16 address); // return byte from address
 
 	// cc = 11 
 	// Used for 65C816 instructions, which the NES uses.
