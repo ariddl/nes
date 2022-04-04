@@ -79,7 +79,12 @@ private:
 	bool DEC();
 	bool INC();
 
+
+	/* -- Need to implement please -- */
+	bool store_byte(u16 address, u8 byte);
+
 	u8 get_byte(u16 address); // return byte from address
+
 
 	// cc = 11 
 	// Used for 65C816 instructions, which the NES uses.
@@ -114,18 +119,37 @@ private:
 
 	// Memory
 	u8 memory[page_count][page_size];
-	u16 instr_arg;
+	u16 instr_arg; // Used in addressing modes. Returns byte loaded. 
+	int add_cycles; // Used in addressing modes. Returns additional cycle count. 
 
 	/*
-		0000-07FF is RAM, 0800-1FFF are mirrors of RAM (you AND the address with 07FF to get the effective address)
-		2000-2007 is how the CPU writes to the PPU, 2008-3FFF are mirrors of that address range.
+		0000-07FF is RAM, 0800-1FFF are mirrors of RAM (you AND the address with
+		07FF to get the effective address)
+
+		2000-2007 is how the CPU writes to the PPU, 2008-3FFF are mirrors of
+		that address range.
+
 		4000-401F is for IO ports and sound
+
 		4020-4FFF is rarely used, but can be used by some cartridges
-		5000-5FFF is rarely used, but can be used by some cartridges, often as bank switching registers, not actual memory, but some cartridges put RAM there
-		6000-7FFF is often cartridge WRAM. Since emulators usually emulate this whether it actually exists in the cartridge or not, there's a little bit of controversy about NES headers not adequately representing a cartridge.
-		8000-FFFF is the main area the cartridge ROM is mapped to in memory. Sometimes it can be bank switched, usually in 32k, 16k, or 8k sized banks.
+
+		5000-5FFF is rarely used, but can be used by some cartridges, often as
+		bank switching registers, not actual memory, but some cartridges put RAM
+		there
+
+		6000-7FFF is often cartridge WRAM. Since emulators usually emulate this
+		whether it actually exists in the cartridge or not, there's a little bit
+		of controversy about NES headers not adequately representing a
+		cartridge.
+
+		8000-FFFF is the main area the cartridge ROM is mapped to in memory.
+		Sometimes it can be bank switched, usually in 32k, 16k, or 8k sized
+		banks.
 	*/
 	u8* memory_map[256];
+	
+	/* -- Need some variable to replace m_code.size() -- */
+	int code_size; 
 
 	system *m_system;
 };

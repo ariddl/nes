@@ -68,7 +68,6 @@ const cpu::group cpu::s_handlers[4] = {
 
 cpu::cpu(system *sys) 
     : m_registers{}
-    , m_stack{}
 	, m_system(sys) {
 	reset();
 }
@@ -86,13 +85,13 @@ void cpu::reset() {
 bool cpu::execute_next() {
 	// We need an actual clock. For now this will get us by to test individual
 	// instructions.
-	if (m_registers.PC >= m_code.size())
+	if (m_registers.PC >= code_size)
 		return false;
 	
 	// The instruction handler will move PC as necessary for additional bytes.
 	// Opcodes are in the format: aaabbbcc. aaa = group, bbb = addr mode, cc =
 	// group.
-	u8 opcode = m_code[m_registers.PC++];
+	u8 opcode = get_byte(m_registers.PC++);
 	u8 operation = (opcode >> 5) & 0x7;
 	u8 addrmode = (opcode >> 2) & 0x7;
 	u8 tab = opcode & 0x3;
@@ -212,7 +211,12 @@ bool cpu::STY() {
 }
 
 bool cpu::LDY() {
-	return false; // stub
+	// Flags: N, Z
+	u8 contents = instr_arg;
+	m_registers.status.N = contents < 0 ? 1 : 0;
+	m_registers.status.Z = contents == 0 ? 1 : 0;
+	m_registers.Y = contents;
+	return true;
 }
 
 bool cpu::CPY() {
@@ -245,7 +249,12 @@ bool cpu::STA() {
 }
 
 bool cpu::LDA() {
-	return false; // stub
+	// Flags: N, Z
+	u8 contents = instr_arg;
+	m_registers.status.N = contents < 0 ? 1 : 0;
+	m_registers.status.Z = contents == 0 ? 1 : 0;
+	m_registers.A = contents;
+	return true;
 }
 
 bool cpu::CMP() {
@@ -279,7 +288,12 @@ bool cpu::STX() {
 }
 
 bool cpu::LDX() {
-	return false; // stub
+	// Flags: N, Z
+	u8 contents = instr_arg;
+	m_registers.status.N = contents < 0 ? 1 : 0;
+	m_registers.status.Z = contents == 0 ? 1 : 0;
+	m_registers.X = contents;
+	return true;
 }
 
 bool cpu::DEC() {
