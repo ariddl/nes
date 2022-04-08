@@ -33,6 +33,7 @@ class cpu {
 
 public:
 	cpu(system *sys);
+	~cpu();
 
 private:
 	void reset();
@@ -118,7 +119,9 @@ private:
 	} m_registers;
 
 	u16 instr_arg; // Used in addressing modes. Returns byte loaded. 
-	u32 add_cycles; // Used in addressing modes. Returns additional cycle count. 
+	u16 instr_addr; // Used in addressing modes. Needed for store instruction. 9
+	bool add_cycle; // Used in addressing modes. True if crosses page.
+	u64 total_cycles; // 
 
 	/*
 		0000-07FF is RAM, 0800-1FFF are mirrors of RAM (you AND the address with

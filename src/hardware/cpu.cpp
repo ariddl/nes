@@ -70,14 +70,14 @@ cpu::cpu(system *sys)
     : m_registers{}
 	, m_system(sys)
 	, instr_arg(0)
-	, add_cycles(0)
+	, add_cycle(false)
 	, memory{}
 	, memory_map{} {
 	reset();
 }
 
 cpu::~cpu() {
-	
+	delete[] memory;
 }
 
 void cpu::reset() {
@@ -88,6 +88,8 @@ void cpu::reset() {
 	// When the CPU boots up, it reads the Reset vector, located at FFFC. 
 	// That contains a 16-bit value which tells the CPU where to jump to.
     m_registers.S = stack_size - 1; // $FF
+	delete[] memory;
+	memory = new u8[0xffff];
 }
 
 bool cpu::execute_next() {
@@ -127,51 +129,51 @@ bool cpu::execute_next() {
 
 // Addressing modes: 
 void cpu::IMM() {
-	u8 immediate = get_byte(m_registers.PC + 1);
+	u8 immediate = get_byte();
 	instr_arg = immediate;
 }
 
 void cpu::ZP() {
-	u8 address = get_byte(m_registers.PC + 1);
-	instr_arg = memory[0][address];
+	u8 address = get_byte();
+	instr_arg = get_byte(address);
 }
 
 void cpu::ABS() {
-	// For JMP the PC is set to address: u16 address = (byte1 << 8) + byte2; 
-	u8 byte1 = get_byte(m_registers.PC + 1);
-	u8 byte2 = get_byte(m_registers.PC + 2);
-	instr_arg = memory[byte2][byte1];
+	// For JMP the PC is set to address: u16 address = (byte2 << 8) | byte1; 
+	u8 byte1 = get_byte();
+	u8 byte2 = get_byte();
+	instr_arg = get_byte((byte2 << 8) | byte1);
 }
 
 void cpu::ZPX() {
 	u8 contents = m_registers.X;
 	u8 byte = get_byte(m_registers.PC + 1);
 	u8 address = byte + contents;
-	instr_arg = memory[0][address];
+	instr_arg = get_byte(address);
 }
 
 void cpu::ABX() {
 	u8 contents = m_registers.X;
-	u8 byte1 = get_byte(m_registers.PC + 1);
-	u8 byte2 = get_byte(m_registers.PC + 2);
+	u8 byte1 = get_byte();
+	u8 byte2 = get_byte();
 	u16 address = ((byte2 << 8) + byte1) + contents;
-	instr_arg = memory[address >> 8][address << 8];
+	instr_arg = get_byte(address);
 }
 
 void cpu::ABY() {
 	u8 contents = m_registers.Y;
-	u8 byte1 = get_byte(m_registers.PC + 1);
-	u8 byte2 = get_byte(m_registers.PC + 2);
+	u8 byte1 = get_byte();
+	u8 byte2 = get_byte();
 	u16 address = ((byte2 << 8) + byte1) + contents;
-	instr_arg = memory[address >> 8][address << 8];
+	instr_arg = get_byte(address);
 
 }
 
 void cpu::ZPY() {
 	u8 contents = m_registers.Y;
-	u8 byte = get_byte(m_registers.PC + 1);
+	u8 byte = get_byte();
 	u8 address = byte + contents; // must be u8 because 00xx
-	instr_arg = memory[0][address];
+	instr_arg = get_byte(address);
 }
 
 void cpu::ACC() {
@@ -181,20 +183,21 @@ void cpu::ACC() {
 
 void cpu::IDZPX() {
 	u8 contents = m_registers.X;
-	u8 byte = get_byte(m_registers.PC + 1);
+	u8 byte = get_byte();
 	u8 z_address = contents + byte;
-	u8 address_byte1 = memory[0][z_address];
-	u8 address_byte2 = memory[0][z_address + 1];
-	instr_arg = memory[address_byte2][address_byte1];
+	u8 address_byte1 = get_byte(z_address);
+	u8 address_byte2 = get_byte(z_address + 1);
+	instr_arg = get_byte((address_byte2 << 8) | address_byte1);
 }
 
 void cpu::IDZPY() {
-	u8 contents = m_registers.Y;
-	u8 byte = get_byte(m_registers.PC + 1);
-	u8 address_byte1 = memory[0][byte];
-	u8 address_byte2 = memory[0][byte + 1];
-	u16 address = ((address_byte2 << 8) + address_byte1) + contents;
-	instr_arg = memory[address >> 8][address << 8];
+	u8 contents1 = m_registers.Y;
+	u8 byte = get_byte();
+	u8 contents2 = get_byte(byte);
+	bool carry = (contents1 + contents2 > 0xFF);
+	u8 address_byte1 = contents1 + contents2;
+	u8 address_byte2 = get_byte(byte + 1) + carry;
+	instr_arg = get_byte((address_byte2 << 8) | address_byte1);
 }
 
 // cc == 00
