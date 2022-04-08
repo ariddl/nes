@@ -68,8 +68,16 @@ const cpu::group cpu::s_handlers[4] = {
 
 cpu::cpu(system *sys) 
     : m_registers{}
-	, m_system(sys) {
+	, m_system(sys)
+	, instr_arg(0)
+	, add_cycles(0)
+	, memory{}
+	, memory_map{} {
 	reset();
+}
+
+cpu::~cpu() {
+	
 }
 
 void cpu::reset() {
@@ -85,13 +93,13 @@ void cpu::reset() {
 bool cpu::execute_next() {
 	// We need an actual clock. For now this will get us by to test individual
 	// instructions.
-	if (m_registers.PC >= code_size)
+	if (m_registers.PC == 0xffff)
 		return false;
 	
 	// The instruction handler will move PC as necessary for additional bytes.
 	// Opcodes are in the format: aaabbbcc. aaa = group, bbb = addr mode, cc =
 	// group.
-	u8 opcode = get_byte(m_registers.PC++);
+	u8 opcode = get_byte();
 	u8 operation = (opcode >> 5) & 0x7;
 	u8 addrmode = (opcode >> 2) & 0x7;
 	u8 tab = opcode & 0x3;
@@ -187,10 +195,6 @@ void cpu::IDZPY() {
 	u8 address_byte2 = memory[0][byte + 1];
 	u16 address = ((address_byte2 << 8) + address_byte1) + contents;
 	instr_arg = memory[address >> 8][address << 8];
-}
-
-u8 cpu::get_byte(u16 address) {
-	return 0; // stub
 }
 
 // cc == 00
@@ -302,4 +306,14 @@ bool cpu::DEC() {
 
 bool cpu::INC() {
 	return false; // stub
+}
+
+void cpu::store_byte(u16 address, u8 byte) {
+	memory[address] = byte;
+}
+
+u8 cpu::get_byte(u16 address) const {
+	// TODO: Instead of having bounds checking here, let's add a
+	// new field to our instruction table with minimum number of bytes
+	return memory[address];
 }

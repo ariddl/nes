@@ -81,10 +81,10 @@ private:
 
 
 	/* -- Need to implement please -- */
-	bool store_byte(u16 address, u8 byte);
+	void store_byte(u16 address, u8 byte);
 
-	u8 get_byte(u16 address); // return byte from address
-
+	u8 get_byte(u16 address) const; // return byte from address
+	u8 get_byte() { return get_byte(m_registers.PC++); }
 
 	// cc = 11 
 	// Used for 65C816 instructions, which the NES uses.
@@ -117,10 +117,8 @@ private:
 		} status; // Status
 	} m_registers;
 
-	// Memory
-	u8 memory[page_count][page_size];
 	u16 instr_arg; // Used in addressing modes. Returns byte loaded. 
-	int add_cycles; // Used in addressing modes. Returns additional cycle count. 
+	u32 add_cycles; // Used in addressing modes. Returns additional cycle count. 
 
 	/*
 		0000-07FF is RAM, 0800-1FFF are mirrors of RAM (you AND the address with
@@ -146,10 +144,8 @@ private:
 		Sometimes it can be bank switched, usually in 32k, 16k, or 8k sized
 		banks.
 	*/
-	u8* memory_map[256];
-	
-	/* -- Need some variable to replace m_code.size() -- */
-	int code_size; 
+	u8 *memory;
+	u8 *memory_map[256];
 
 	system *m_system;
 };
