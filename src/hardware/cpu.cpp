@@ -70,7 +70,8 @@ cpu::cpu(system *sys)
     : m_registers{}
 	, m_system(sys)
 	, instr_arg(0)
-	, add_cycle(false)
+	, cross_page(false)
+	, branch(false)
 	, memory{}
 	, memory_map{} {
 	reset();

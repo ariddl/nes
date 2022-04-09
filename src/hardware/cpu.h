@@ -80,6 +80,54 @@ private:
 	bool DEC();
 	bool INC();
 
+	// cc = 11 
+	// Used for 65C816 instructions, which the NES uses.
+	// Currently not worrying about it.
+
+	// Branch xxy1 0000
+	bool BPL();
+	bool BMI();
+	bool BVC();
+	bool BVS();
+	bool BCC();
+	bool BCS();
+	bool BNE();
+	bool BEQ();
+
+	// Interrupt/subroutine no pattern
+	bool BRK();
+	bool JSRABS();
+	bool RTI();
+	bool RTS();
+
+	// Single-byte instructions 
+	// iiii1000
+	bool PHP();
+	bool CLC();
+	bool PLP();
+	bool SEC();
+	bool PHA();
+	bool CLI();
+	bool PLA();
+	bool SEI();
+	bool DEY();
+	bool TYA();
+	bool TAY();
+	bool CLV();
+	bool INY();
+	bool CLD();
+	bool INX();
+	bool SED();
+
+	//jjjj1010 does not include all jjjj
+	bool TXA(); // 0x8A
+	bool TXS(); // 0x9A
+	bool TAX(); // 0xAA
+	bool TSX(); // 0xBA
+	bool DEX(); // 0xCA
+	bool NOP(); // 0xEA
+
+
 
 	/* -- Need to implement please -- */
 	void store_byte(u16 address, u8 byte);
@@ -87,9 +135,6 @@ private:
 	u8 get_byte(u16 address) const; // return byte from address
 	u8 get_byte() { return get_byte(m_registers.PC++); }
 
-	// cc = 11 
-	// Used for 65C816 instructions, which the NES uses.
-	// Currently not worrying about it.
 
 	static const group s_handlers[4];
 
@@ -120,7 +165,8 @@ private:
 
 	u16 instr_arg; // Used in addressing modes. Returns byte loaded. 
 	u16 instr_addr; // Used in addressing modes. Needed for store instruction. 9
-	bool add_cycle; // Used in addressing modes. True if crosses page.
+	bool cross_page; // True if address crosses page.
+	bool branch; // True if branch taken. 
 	u64 total_cycles; // 
 
 	/*
