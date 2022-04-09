@@ -312,6 +312,144 @@ bool cpu::INC() {
 	return false; // stub
 }
 
+bool BPL() {
+	return false; // stub
+}
+
+bool BMI() {
+	return false; // stub
+}
+
+bool BVC() {
+	return false; // stub
+}
+
+bool BVS() {
+	return false; // stub
+}
+
+bool BCC() {
+	return false; // stub
+}
+
+bool BCS() {
+	return false; // stub
+}
+
+bool BNE() {
+	return false; // stub
+}
+
+bool BEQ() {
+	return false; // stub
+}
+
+bool BRK() {
+	return false; // stub
+}
+
+bool JSRAB() {
+	return false; // stub
+}
+
+bool RTI() {
+	return false; // stub
+}
+
+bool RTS() {
+	return false; // stub
+}
+
+bool PHP() {
+	return false; // stub
+}
+
+bool CLC() {
+	return false; // stub
+}
+
+bool PLP() {
+	return false; // stub
+}
+
+bool SEC() {
+	return false; // stub
+}
+
+bool PHA() {
+	return false; // stub
+}
+
+bool CLI() {
+	return false; // stub
+}
+
+bool PLA() {
+	return false; // stub
+}
+
+bool SEI() {
+	return false; // stub
+}
+
+bool DEY() {
+	return false; // stub
+}
+
+bool TYA() {
+	return false; // stub
+}
+
+bool TAY() {
+	return false; // stub
+}
+
+bool CLV() {
+	return false; // stub
+}
+
+bool INY() {
+	return false; // stub
+}
+
+bool CLD() {
+	return false; // stub
+}
+
+bool INX() {
+	return false; // stub
+}
+
+bool SED() {
+	return false; // stub
+}
+
+bool TXA() {
+	return false; // stub
+} 
+
+bool TXS() {
+	return false; // stub
+} 
+
+bool TAX() {
+	return false; // stub
+} 
+
+bool TSX() {
+	return false; // stub
+} 
+
+bool DEX() {
+	return false; // stub
+} 
+
+bool NOP() {
+	return false; // stub
+} 
+
+
+
 void cpu::store_byte(u16 address, u8 byte) {
 	memory[address] = byte;
 }
