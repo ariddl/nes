@@ -20,24 +20,6 @@ class cpu {
 		u8 cycles;
 	};
 
-	struct instruction {
-		const char *name;
-		instruction_handler handler;
-		u8 cycles;
-	};
-
-	struct addrmode {
-		const char *name;
-		addrmode_handler handler;
-		u8 cycles;
-	};
-
-	struct group {
-		instruction instructions[8];
-		addrmode addressing_modes[8];
-	};
-
-
 public:
 	cpu(system *sys);
 	~cpu();
@@ -146,7 +128,6 @@ private:
 
 	opcode opcode_set[256];
 	void setup();
-	static const group s_handlers[4];
 
 	struct {
 		// Accumulator

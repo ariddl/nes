@@ -1,71 +1,6 @@
 #include "cpu.h"
 #include "system.h"
 
-// TODO: Find number of cycles per instruction.
-const cpu::group cpu::s_handlers[4] = {
-	// cc == 00
-    {
-		{
-			{"UNK", nullptr,   0}, {"BIT",    &cpu::BIT,    0}, 
-			{"JMP", &cpu::JMP, 0}, {"JMPABS", &cpu::JMPABS, 0},
-			{"STY", &cpu::STY, 0}, {"LDY",    &cpu::LDY,    0},
-			{"CPY", &cpu::CPY, 0}, {"CPX",    &cpu::CPX,    0}
-		},
-		{
-			{"IMM", &cpu::IMM, 0}, {"ZP",  &cpu::ZP,  0},
-			{"UNK", nullptr,   0}, {"ABS", &cpu::ABS, 0}, 
-			{"UNK", nullptr,   0}, {"ZPX", &cpu::ZPX, 0},
-			{"UNK", nullptr,   0}, {"ABX", &cpu::ABX, 0}
-		}
-    },
-	// cc == 01
-	{
-		{
-			{"ORA", &cpu::ORA, 0}, {"AND", &cpu::AND, 0},
-			{"EOR", &cpu::EOR, 0}, {"ADC", &cpu::ADC, 0},
-			{"STA", &cpu::STA, 0}, {"LDA", &cpu::LDA, 0},
-			{"CMP", &cpu::CMP, 0}, {"SBC", &cpu::SBC, 0}
-		},
-		{
-			{"IDZPX", &cpu::IDZPX,  0}, {"ZP",  &cpu::ZP,  0},
-			{"IMM",   &cpu::IMM,    0}, {"ABS", &cpu::ABS, 0},
-			{"IDZPY", &cpu::IDZPY,  0}, {"ZPX", &cpu::ZPX, 0},
-			{"ABY",   &cpu::ABY,    0}, {"ABX", &cpu::ABX, 0}	 
-		}
-	},
-	// cc == 10
-	{
-		{
-			{"ASL", &cpu::ASL, 0}, {"ROL", &cpu::ROL, 0},
-			{"LSR", &cpu::LSR, 0}, {"ROR", &cpu::ROR, 0},
-			{"STX", &cpu::STX, 0}, {"LDX", &cpu::LDX, 0},
-			{"DEC", &cpu::DEC, 0}, {"INC", &cpu::INC, 0},
-		},
-		{
-			{"IMM", &cpu::IMM, 0}, {"ZP",  &cpu::ZP,  0},
-			{"ACC", &cpu::ACC, 0}, {"ABS", &cpu::ABS, 0}, 
-			{"UNK", nullptr,   0}, {"ZPX", &cpu::ZPX, 0},
-			{"ABX", &cpu::ABX, 0}, {"UNK", nullptr,   0}
-		}
-	},
-	// cc == 11
-	{
-		{
-			// TODO: NES Specific instructions?
-			{"UNK", nullptr, 0}, {"UNK", nullptr, 0},
-			{"UNK", nullptr, 0}, {"UNK", nullptr, 0},
-			{"UNK", nullptr, 0}, {"UNK", nullptr, 0},
-			{"UNK", nullptr, 0}, {"UNK", nullptr, 0},
-		},
-		{
-			{"UNK", nullptr, 0}, {"UNK", nullptr, 0},
-			{"UNK", nullptr, 0}, {"UNK", nullptr, 0},
-			{"UNK", nullptr, 0}, {"UNK", nullptr, 0},
-			{"UNK", nullptr, 0}, {"UNK", nullptr, 0},
-		}
-	}
-};
-
 void cpu::setup()
 {
 	opcode_set[0] = {"BRK", &cpu::BRK, &cpu::REL, 0};
@@ -108,18 +43,17 @@ bool cpu::execute_next() {
 	// The instruction handler will move PC as necessary for additional bytes.
 	// Opcodes are in the format: aaabbbcc. aaa = group, bbb = addr mode, cc =
 	// group.
-	u8 opcode = get_byte();
-	u8 operation = (opcode >> 5) & 0x7;
-	u8 addrmode = (opcode >> 2) & 0x7;
-	u8 tab = opcode & 0x3;
-	if (tab >= 4 || operation >= 8) // TODO: Constants!
-		return false;
+	u8 opcode_byte = get_byte();
+
 	
 	// TODO: Account for cycles from these addressing mode and instruction
 	// overhead.
-	const group &g = s_handlers[tab];
-	(this->*g.addressing_modes[addrmode].handler)();
-	return (this->*g.instructions[operation].handler)();
+	const opcode &o = opcode_set[opcode_byte];
+	total_cycles = opcode_set[opcode_byte].cycles; 
+	cross_page = false; branch = false;
+	(this->*o.addr_handler)(); bool return_val = (this->*o.instr_handler)();
+	total_cycles += cross_page + branch;
+	return return_val;
 }
 
 // Currently we are making the assumption that each instruction belongs to only
