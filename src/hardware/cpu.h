@@ -41,6 +41,7 @@ private:
 	void IDZPY();
 	void REL(); // relative
 	void IMP(); // implied
+	void IDABS(); 
 
 	// cc == 00
 	// null
