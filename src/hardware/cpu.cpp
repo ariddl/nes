@@ -66,6 +66,11 @@ const cpu::group cpu::s_handlers[4] = {
 	}
 };
 
+void cpu::setup()
+{
+	opcode_set[0] = {"BRK", &cpu::BRK, &cpu::REL, 0};
+}
+
 cpu::cpu(system *sys) 
     : m_registers{}
 	, m_system(sys)
@@ -74,6 +79,7 @@ cpu::cpu(system *sys)
 	, branch(false)
 	, memory{}
 	, memory_map{} {
+	setup();
 	reset();
 }
 
@@ -201,6 +207,10 @@ void cpu::IDZPY() {
 	instr_arg = get_byte((address_byte2 << 8) | address_byte1);
 }
 
+void cpu::REL() {
+	// stub
+}
+
 // cc == 00
 bool cpu::BIT() {
 	return false; // stub
@@ -312,139 +322,139 @@ bool cpu::INC() {
 	return false; // stub
 }
 
-bool BPL() {
+bool cpu::BPL() {
 	return false; // stub
 }
 
-bool BMI() {
+bool cpu::BMI() {
 	return false; // stub
 }
 
-bool BVC() {
+bool cpu::BVC() {
 	return false; // stub
 }
 
-bool BVS() {
+bool cpu::BVS() {
 	return false; // stub
 }
 
-bool BCC() {
+bool cpu::BCC() {
 	return false; // stub
 }
 
-bool BCS() {
+bool cpu::BCS() {
 	return false; // stub
 }
 
-bool BNE() {
+bool cpu::BNE() {
 	return false; // stub
 }
 
-bool BEQ() {
+bool cpu::BEQ() {
 	return false; // stub
 }
 
-bool BRK() {
+bool cpu::BRK() {
 	return false; // stub
 }
 
-bool JSRAB() {
+bool cpu::JSRABS() {
 	return false; // stub
 }
 
-bool RTI() {
+bool cpu::RTI() {
 	return false; // stub
 }
 
-bool RTS() {
+bool cpu::RTS() {
 	return false; // stub
 }
 
-bool PHP() {
+bool cpu::PHP() {
 	return false; // stub
 }
 
-bool CLC() {
+bool cpu::CLC() {
 	return false; // stub
 }
 
-bool PLP() {
+bool cpu::PLP() {
 	return false; // stub
 }
 
-bool SEC() {
+bool cpu::SEC() {
 	return false; // stub
 }
 
-bool PHA() {
+bool cpu::PHA() {
 	return false; // stub
 }
 
-bool CLI() {
+bool cpu::CLI() {
 	return false; // stub
 }
 
-bool PLA() {
+bool cpu::PLA() {
 	return false; // stub
 }
 
-bool SEI() {
+bool cpu::SEI() {
 	return false; // stub
 }
 
-bool DEY() {
+bool cpu::DEY() {
 	return false; // stub
 }
 
-bool TYA() {
+bool cpu::TYA() {
 	return false; // stub
 }
 
-bool TAY() {
+bool cpu::TAY() {
 	return false; // stub
 }
 
-bool CLV() {
+bool cpu::CLV() {
 	return false; // stub
 }
 
-bool INY() {
+bool cpu::INY() {
 	return false; // stub
 }
 
-bool CLD() {
+bool cpu::CLD() {
 	return false; // stub
 }
 
-bool INX() {
+bool cpu::INX() {
 	return false; // stub
 }
 
-bool SED() {
+bool cpu::SED() {
 	return false; // stub
 }
 
-bool TXA() {
+bool cpu::TXA() {
 	return false; // stub
 } 
 
-bool TXS() {
+bool cpu::TXS() {
 	return false; // stub
 } 
 
-bool TAX() {
+bool cpu::TAX() {
 	return false; // stub
 } 
 
-bool TSX() {
+bool cpu::TSX() {
 	return false; // stub
 } 
 
-bool DEX() {
+bool cpu::DEX() {
 	return false; // stub
 } 
 
-bool NOP() {
+bool cpu::NOP() {
 	return false; // stub
 } 
 

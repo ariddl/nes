@@ -13,6 +13,13 @@ class cpu {
 	static constexpr size_t page_count = memory_size/page_size;
 	static constexpr size_t stack_size = page_size;
 
+	struct opcode { 
+		const char *name;
+		instruction_handler instr_handler;
+		addrmode_handler addr_handler;
+		u8 cycles;
+	};
+
 	struct instruction {
 		const char *name;
 		instruction_handler handler;
@@ -49,6 +56,7 @@ private:
 	void ACC();
 	void IDZPX();
 	void IDZPY();
+	void REL(); // relative
 
 	// cc == 00
 	// null
@@ -136,6 +144,8 @@ private:
 	u8 get_byte() { return get_byte(m_registers.PC++); }
 
 
+	opcode opcode_set[256];
+	void setup();
 	static const group s_handlers[4];
 
 	struct {
