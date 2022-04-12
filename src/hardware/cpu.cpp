@@ -3,8 +3,13 @@
 
 void cpu::setup()
 {
-	opcode_set[0x00] = {"BRK", &cpu::BRK, &cpu::REL, 0, 0};
-	// opcode_set[0x01] = {"ORA", &cpu::ORA, &cpu:}
+	opcode_set[0x00] = {"BRK", &cpu::BRK, &cpu::REL, 7, 1};
+	opcode_set[0x01] = {"ORA", &cpu::ORA, &cpu::IDZPX, 6, 2};
+	opcode_set[0x05] = {"ORA", &cpu::ORA, &cpu::ZP, 3, 2};
+	opcode_set[0x06] = {"ASL", &cpu::ASL, &cpu::ZP, 5, 2};
+	opcode_set[0x08] = {"PHP", &cpu::PHP, &cpu::IMP, 3, 2};
+	opcode_set[0x09] = {"ORA", &cpu::ORA, &cpu::IMM, 2, 2};
+
 }
 
 cpu::cpu(system *sys) 
@@ -143,6 +148,10 @@ void cpu::IDZPY() {
 }
 
 void cpu::REL() {
+	// stub
+}
+
+void cpu::IMP() {
 	// stub
 }
 

@@ -40,6 +40,7 @@ private:
 	void IDZPX();
 	void IDZPY();
 	void REL(); // relative
+	void IMP(); // implied
 
 	// cc == 00
 	// null
