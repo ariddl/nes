@@ -18,6 +18,7 @@ class cpu {
 		instruction_handler instr_handler;
 		addrmode_handler addr_handler;
 		u8 cycles;
+		u8 bytes;
 	};
 
 public:

@@ -3,7 +3,8 @@
 
 void cpu::setup()
 {
-	opcode_set[0] = {"BRK", &cpu::BRK, &cpu::REL, 0};
+	opcode_set[0x00] = {"BRK", &cpu::BRK, &cpu::REL, 0, 0};
+	// opcode_set[0x01] = {"ORA", &cpu::ORA, &cpu:}
 }
 
 cpu::cpu(system *sys) 
