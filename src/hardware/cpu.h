@@ -6,7 +6,7 @@
 
 class system;
 class cpu {
-	using instruction_handler = bool (cpu::*)();
+	using instruction_handler = void (cpu::*)();
 	using addrmode_handler = void (cpu::*)();
 	static constexpr size_t memory_size = 32768;
 	static constexpr size_t page_size = 256;
@@ -45,80 +45,80 @@ private:
 
 	// cc == 00
 	// null
-	bool BIT();
-	bool JMP();
-	bool JMPABS();
-	bool STY();
-	bool LDY();
-	bool CPY();
-	bool CPX();
+	void BIT();
+	void JMP();
+	void JMPABS();
+	void STY();
+	void LDY();
+	void CPY();
+	void CPX();
 
 	// cc == 01
-	bool ORA();
-	bool AND();
-	bool EOR();
-	bool ADC();
-	bool STA();
-	bool LDA();
-	bool CMP();
-	bool SBC();
+	void ORA();
+	void AND();
+	void EOR();
+	void ADC();
+	void STA();
+	void LDA();
+	void CMP();
+	void SBC();
 
 	// cc == 10
-	bool ASL();
-	bool ROL();
-	bool LSR();
-	bool ROR();
-	bool STX();
-	bool LDX();
-	bool DEC();
-	bool INC();
+	void ASL();
+	void ROL();
+	void LSR();
+	void ROR();
+	void STX();
+	void LDX();
+	void DEC();
+	void INC();
 
 	// cc = 11 
 	// Used for 65C816 instructions, which the NES uses.
 	// Currently not worrying about it.
 
 	// Branch xxy1 0000
-	bool BPL();
-	bool BMI();
-	bool BVC();
-	bool BVS();
-	bool BCC();
-	bool BCS();
-	bool BNE();
-	bool BEQ();
+	void BPL();
+	void BMI();
+	void BVC();
+	void BVS();
+	void BCC();
+	void BCS();
+	void BNE();
+	void BEQ();
 
 	// Interrupt/subroutine no pattern
-	bool BRK();
-	bool JSRABS();
-	bool RTI();
-	bool RTS();
+	void BRK();
+	void JSR();
+	void RTI();
+	void RTS();
 
 	// Single-byte instructions 
 	// iiii1000
-	bool PHP();
-	bool CLC();
-	bool PLP();
-	bool SEC();
-	bool PHA();
-	bool CLI();
-	bool PLA();
-	bool SEI();
-	bool DEY();
-	bool TYA();
-	bool TAY();
-	bool CLV();
-	bool INY();
-	bool CLD();
-	bool INX();
-	bool SED();
+	void PHP();
+	void CLC();
+	void PLP();
+	void SEC();
+	void PHA();
+	void CLI();
+	void PLA();
+	void SEI();
+	void DEY();
+	void TYA();
+	void TAY();
+	void CLV();
+	void INY();
+	void CLD();
+	void INX();
+	void SED();
 
 	//jjjj1010 does not include all jjjj
-	bool TXA(); // 0x8A
-	bool TXS(); // 0x9A
-	bool TAX(); // 0xAA
-	bool TSX(); // 0xBA
-	bool DEX(); // 0xCA
-	bool NOP(); // 0xEA
+	void TXA(); // 0x8A
+	void TXS(); // 0x9A
+	void TAX(); // 0xAA
+	void TSX(); // 0xBA
+	void DEX(); // 0xCA
+	void NOP(); // 0xEA
 
 
 
