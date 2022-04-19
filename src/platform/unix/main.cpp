@@ -1,4 +1,5 @@
 #include "system.h"
+#include "ines.h"
 #include <iostream>
 #include <iomanip>
 #include <string>
@@ -26,8 +27,18 @@ void dump_cpu(cpu *cpu, u32 cols, u32 start, u32 end) {
     std::cout << std::endl << std::dec;
 }
 
-int main() {
+int main(int argc, const char **argv) {
+    if (argc < 2)
+        return 1;
+
     cpu c(nullptr);
+
+    size_t sz;
+    auto rom = ines::load(argv[1], sz);
+    c.init(rom.get(), sz);
+
+    for (size_t i = 0; i < sz; ++i)
+        c.execute_next();
 
     dump_cpu(&c, 16, 0, 0x100);
 

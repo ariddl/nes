@@ -1,5 +1,7 @@
 #include "cpu.h"
 #include "system.h"
+#include <cstring>
+#include <cstdio>
 
 void cpu::setup()
 {
@@ -277,6 +279,11 @@ cpu::~cpu() {
 	delete[] memory;
 }
 
+void cpu::init(const u8 *mem, size_t sz) {
+	memcpy(memory + 0x2000, mem, sz);
+	m_registers.PC = 0x2000;
+}
+
 void cpu::reset() {
 	// We need the reset vector to start executing instructions.
 	// Note that the PPU is needed for any games to run instructions
@@ -298,6 +305,7 @@ bool cpu::execute_next() {
 	cross_page = false; branch = false;
 	(this->*o.addr_handler)();
 	(this->*o.instr_handler)();
+	printf("%s\n", o.name);
 	total_cycles += opcode_set[opcode_byte].cycles + cross_page + branch;
 	return true;
 }

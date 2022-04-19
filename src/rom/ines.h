@@ -2,11 +2,12 @@
 #define INES_H
 
 #include <string>
+#include <memory>
 #include "nes.h"
 
 class ines {
 public:
-	bool load(const std::string &file);
+	static std::unique_ptr<u8[]>  load(const std::string &file, std::size_t &size);
 };
 
 #endif

@@ -25,12 +25,14 @@ public:
 	cpu(system *sys);
 	~cpu();
 	
+	void init(const u8 *mem, size_t sz);
+
 	const auto get_registers() const { return m_registers; }
 	const u8 *get_mem() const { return memory; }
 
+	bool execute_next();
 private:
 	void reset();
-	bool execute_next();
 
 	void IMM();
 	void ZP();
