@@ -322,20 +322,23 @@ void cpu::IMM() {
 
 void cpu::ZP() {
 	u8 address = get_byte();
-	instr_arg = get_byte(address);
+	instr_addr = (u8)(address);
+	instr_arg = get_byte((u8)address);
 }
 
 void cpu::ABS() {
 	// For JMP the PC is set to address: u16 address = (byte2 << 8) | byte1; 
 	u8 byte1 = get_byte();
 	u8 byte2 = get_byte();
-	instr_arg = get_byte((byte2 << 8) | byte1);
+	instr_addr = (byte2 << 8) | byte1;
+	instr_arg = get_byte(instr_addr);
 }
 
 void cpu::ZPX() {
 	u8 contents = m_registers.X;
 	u8 byte = get_byte(m_registers.PC + 1);
 	u8 address = byte + contents;
+	instr_addr = address;
 	instr_arg = get_byte(address);
 }
 
@@ -343,23 +346,33 @@ void cpu::ABX() {
 	u8 contents = m_registers.X;
 	u8 byte1 = get_byte();
 	u8 byte2 = get_byte();
-	u16 address = ((byte2 << 8) + byte1) + contents;
-	instr_arg = get_byte(address);
+	bool carry = (byte1 + contents > 0xFF);
+	m_registers.status.C = carry; // might not be needed.
+	cross_page = carry;
+	u8 address_byte1 = byte1 + contents;
+	u8 address_byte2 = byte2 + carry;
+	instr_addr = (address_byte2 << 8) | address_byte1;
+	instr_arg = get_byte(instr_addr);
 }
 
 void cpu::ABY() {
 	u8 contents = m_registers.Y;
 	u8 byte1 = get_byte();
 	u8 byte2 = get_byte();
-	u16 address = ((byte2 << 8) + byte1) + contents;
-	instr_arg = get_byte(address);
-
+	bool carry = (byte1 + contents > 0xFF);
+	m_registers.status.C = carry; // might not be needed.
+	cross_page = carry;
+	u8 address_byte1 = byte1 + contents;
+	u8 address_byte2 = byte2 + carry;
+	instr_addr = (address_byte2 << 8) | address_byte1;
+	instr_arg = get_byte(instr_addr);
 }
 
 void cpu::ZPY() {
 	u8 contents = m_registers.Y;
 	u8 byte = get_byte();
 	u8 address = byte + contents; // must be u8 because 00xx
+	instr_addr = address;
 	instr_arg = get_byte(address);
 }
 
@@ -374,7 +387,8 @@ void cpu::IDZPX() {
 	u8 z_address = contents + byte;
 	u8 address_byte1 = get_byte(z_address);
 	u8 address_byte2 = get_byte(z_address + 1);
-	instr_arg = get_byte((address_byte2 << 8) | address_byte1);
+	instr_addr = (address_byte2 << 8) | address_byte1;
+	instr_arg = get_byte(instr_addr);
 }
 
 void cpu::IDZPY() {
@@ -382,9 +396,12 @@ void cpu::IDZPY() {
 	u8 byte = get_byte();
 	u8 contents2 = get_byte(byte);
 	bool carry = (contents1 + contents2 > 0xFF);
+	m_registers.status.C = carry; // might not be needed.
+	cross_page = carry;
 	u8 address_byte1 = contents1 + contents2;
 	u8 address_byte2 = get_byte(byte + 1) + carry;
-	instr_arg = get_byte((address_byte2 << 8) | address_byte1);
+	instr_addr = (address_byte2 << 8) | address_byte1;
+	instr_arg = get_byte(instr_addr);
 }
 
 void cpu::REL() {
@@ -400,9 +417,15 @@ void cpu::IDABS() {
 }
 
 
-// cc == 00
+
+
 void cpu::BIT() {
-	// stub
+	// Flags: N, V, Z
+	u8 contents = m_registers.A;
+	u8 result = instr_arg & contents;
+	m_registers.status.N = result < 0 ? 1 : 0;
+	m_registers.status.V = result & (1 << 6); // set to 6th bit
+	m_registers.status.Z = result == 0 ? 1 : 0;
 }
 
 void cpu::JMP() {
@@ -414,7 +437,9 @@ void cpu::JMPABS() {
 }
 
 void cpu::STY() {
-	// stub
+	// Flags: none
+	u8 contents = m_registers.Y; 
+	store_byte(instr_addr, contents);
 }
 
 void cpu::LDY() {
@@ -426,32 +451,72 @@ void cpu::LDY() {
 }
 
 void cpu::CPY() {
-	// stub
+	// Flags: N, Z, C
+	u8 A = m_registers.Y;
+	u8 B = ~instr_arg; // inverted for subtracting. 
+	bool carry = (A + B > 0xFF);
+	u8 C = A + B;
+	m_registers.status.N = C < 0 ? 1 : 0;
+	m_registers.status.Z = C == 0 ? 1 : 0;
+	m_registers.status.C = carry;
 }
 
 void cpu::CPX() {
-	// stub
+	// Flags: N, Z, C
+	u8 A = m_registers.X;
+	u8 B = ~instr_arg; // inverted for subtracting. 
+	bool carry = (A + B > 0xFF);
+	u8 C = A + B;
+	m_registers.status.N = C < 0 ? 1 : 0;
+	m_registers.status.Z = C == 0 ? 1 : 0;
+	m_registers.status.C = carry;
 }
 
-// cc == 01
 void cpu::ORA() {
-	// stub
+	// Flags: N, Z
+	u8 contents = m_registers.A;
+	u8 result = instr_arg | contents;
+	m_registers.status.N = result < 0 ? 1 : 0;
+	m_registers.status.V = result & (1 << 6); // set to 6th bit
+	m_registers.status.Z = result == 0 ? 1 : 0;
 }
 
 void cpu::AND() {
-	// stub
+	// Flags: N, Z
+	u8 contents = m_registers.A;
+	u8 result = instr_arg & contents;
+	m_registers.status.N = result < 0 ? 1 : 0;
+	m_registers.status.Z = result == 0 ? 1 : 0;
+	m_registers.A = result;
 }
 
 void cpu::EOR() {
-	// stub
+	// Flags: N, Z
+	u8 contents = m_registers.A;
+	u8 result = instr_arg ^ contents;
+	m_registers.status.N = result < 0 ? 1 : 0;
+	m_registers.status.V = result & (1 << 6); // set to 6th bit
+	m_registers.status.Z = result == 0 ? 1 : 0;
 }
 
 void cpu::ADC() {
-	// stub
+	// Flags: N, V, Z, C
+	u8 A = m_registers.A;
+	u8 B = instr_arg; 
+	bool carry = (A + B > 0xFF);
+	u8 C = A + B + m_registers.status.C;
+	m_registers.A = C;
+
+	m_registers.status.N = C < 0 ? 1 : 0;
+	m_registers.status.V = (~(A ^ B))&(A ^ C)&0x80;
+	m_registers.status.Z = C == 0 ? 1 : 0;
+	m_registers.status.C = carry;
 }
 
 void cpu::STA() {
-	// stub
+	// Flags: none
+	u8 contents = m_registers.A; 
+	store_byte(instr_addr, contents);
 }
 
 void cpu::LDA() {
@@ -463,15 +528,30 @@ void cpu::LDA() {
 }
 
 void cpu::CMP() {
-	// stub
+	// Flags: N, Z, C
+	u8 A = m_registers.A;
+	u8 B = ~instr_arg; // inverted for subtracting. 
+	bool carry = (A + B > 0xFF);
+	u8 C = A + B;
+	m_registers.status.N = C < 0 ? 1 : 0;
+	m_registers.status.Z = C == 0 ? 1 : 0;
+	m_registers.status.C = carry;
 }
 
 void cpu::SBC() {
-	// stub
+	// Flags: N, V, Z, C
+	u8 A = m_registers.A;
+	u8 B = ~instr_arg; // inverted for subtracting. 
+	bool carry = (A + B > 0xFF);
+	u8 C = A + B + m_registers.status.C;
+	m_registers.A = C;
+
+	m_registers.status.N = C < 0 ? 1 : 0;
+	m_registers.status.V = (~(A ^ B))&(A ^ C)&0x80;
+	m_registers.status.Z = C == 0 ? 1 : 0;
+	m_registers.status.C = carry;
 }
 
-
-// cc == 10
 void cpu::ASL() {
 	// stub
 }
@@ -489,7 +569,9 @@ void cpu::ROR() {
 }
 
 void cpu::STX() {
-	// stub
+	// Flags: none
+	u8 contents = m_registers.X; 
+	store_byte(instr_addr, contents);
 }
 
 void cpu::LDX() {
@@ -561,7 +643,8 @@ void cpu::PHP() {
 }
 
 void cpu::CLC() {
-	// stub
+	// Flags: C
+	m_registers.status.C = 0;
 }
 
 void cpu::PLP() {
@@ -569,7 +652,8 @@ void cpu::PLP() {
 }
 
 void cpu::SEC() {
-	// stub
+	// Flags: C
+	m_registers.status.C = 1;
 }
 
 void cpu::PHA() {
@@ -577,7 +661,8 @@ void cpu::PHA() {
 }
 
 void cpu::CLI() {
-	// stub
+	// Flags: I
+	m_registers.status.I = 0;
 }
 
 void cpu::PLA() {
@@ -585,7 +670,8 @@ void cpu::PLA() {
 }
 
 void cpu::SEI() {
-	// stub
+	// Flags: CI
+	m_registers.status.I = 1;
 }
 
 void cpu::DEY() {
@@ -593,15 +679,24 @@ void cpu::DEY() {
 }
 
 void cpu::TYA() {
-	// stub
+	// Flags: N, Z
+	u8 contents = m_registers.Y;
+	m_registers.A = contents;
+	m_registers.status.N = contents < 0 ? 1 : 0;
+	m_registers.status.Z = contents == 0 ? 1 : 0;
 }
 
 void cpu::TAY() {
-	// stub
+	// Flags: N, Z
+	u8 contents = m_registers.A;
+	m_registers.Y = contents;
+	m_registers.status.N = contents < 0 ? 1 : 0;
+	m_registers.status.Z = contents == 0 ? 1 : 0;
 }
 
 void cpu::CLV() {
-	// stub
+	// Flags: V
+	m_registers.status.V = 0;
 }
 
 void cpu::INY() {
@@ -609,7 +704,8 @@ void cpu::INY() {
 }
 
 void cpu::CLD() {
-	// stub
+	// Flags: D
+	m_registers.status.D = 0;
 }
 
 void cpu::INX() {
@@ -617,20 +713,40 @@ void cpu::INX() {
 }
 
 void cpu::SED() {
-	// stub
+	// Flags: D
+	m_registers.status.D = 1;
 }
 
 void cpu::TXA() {
-	// stub
+	// Flags: N, Z
+	u8 contents = m_registers.X;
+	m_registers.A = contents;
+	m_registers.status.N = contents < 0 ? 1 : 0;
+	m_registers.status.Z = contents == 0 ? 1 : 0;
 } 
 
 void cpu::TXS() {
+	// Flags: N, Z
+	u8 contents = m_registers.X;
+	m_registers.S = contents;
+	m_registers.status.N = contents < 0 ? 1 : 0;
+	m_registers.status.Z = contents == 0 ? 1 : 0;
 } 
 
 void cpu::TAX() {
+	// Flags: N, Z
+	u8 contents = m_registers.A;
+	m_registers.X = contents;
+	m_registers.status.N = contents < 0 ? 1 : 0;
+	m_registers.status.Z = contents == 0 ? 1 : 0;
 } 
 
 void cpu::TSX() {
+	// Flags: N, Z
+	u8 contents = m_registers.S;
+	m_registers.X = contents;
+	m_registers.status.N = contents < 0 ? 1 : 0;
+	m_registers.status.Z = contents == 0 ? 1 : 0;
 } 
 
 void cpu::DEX() {
