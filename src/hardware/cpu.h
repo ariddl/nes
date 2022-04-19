@@ -120,14 +120,14 @@ private:
 	void DEX(); // 0xCA
 	void NOP(); // 0xEA
 
-
-
 	/* -- Need to implement please -- */
 	void store_byte(u16 address, u8 byte);
 
 	u8 get_byte(u16 address) const; // return byte from address
 	u8 get_byte() { return get_byte(m_registers.PC++); }
 
+	void push(u8 b) { memory[0x100 + m_registers.S--] = b; }
+	u8 pop() { return memory[0x100 + ++m_registers.S]; }
 
 	opcode opcode_set[256];
 	void setup();
