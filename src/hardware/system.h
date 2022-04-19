@@ -14,6 +14,8 @@ class system {
 public:
     system();
 
+    cpu *get_cpu() { return &m_cpu; }
+
 private:
     cpu m_cpu; // cpu
     ppu m_ppu; // gfx

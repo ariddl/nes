@@ -24,6 +24,9 @@ class cpu {
 public:
 	cpu(system *sys);
 	~cpu();
+	
+	const auto get_registers() const { return m_registers; }
+	const u8 *get_mem() const { return memory; }
 
 private:
 	void reset();
