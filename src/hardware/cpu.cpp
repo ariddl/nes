@@ -297,7 +297,7 @@ void cpu::reset() {
 }
 
 bool cpu::execute_next() {
-	if (memory[m_registers.PC] == 0) return false;
+	if (memory[m_registers.PC] == 0) {printf("\n");return false;}
 	u8 opcode_byte = memory[m_registers.PC++];
 	if (0xffff - m_registers.PC <= opcode_set[opcode_byte].bytes)
 		return false;
@@ -306,7 +306,7 @@ bool cpu::execute_next() {
 	cross_page = false; branch = false;
 	(this->*o.addr_handler)();
 	(this->*o.instr_handler)();
-	printf("%s\n", o.name);
+	printf("%s ", o.name);
 	total_cycles += opcode_set[opcode_byte].cycles + cross_page + branch;
 	return true;
 }
