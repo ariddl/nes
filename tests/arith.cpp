@@ -27,6 +27,12 @@ int main()
     std::cout << "cross page: " <<  carry << std::endl;
     std::cout << r << std::endl;
 
+    uint16_t pc = 0x018A;
+    int8_t offset = 0x80;
+    uint16_t R = pc + offset;
+    std::cout << pc << " " << (pc) + offset << " " << R <<  std::endl;
+
+
 
 
 

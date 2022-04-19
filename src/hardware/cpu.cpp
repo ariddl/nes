@@ -314,7 +314,8 @@ bool cpu::execute_next() {
 // cycle-to-cycle accurate. More thought must go into this before we continue
 // this implementation.
 
-// Addressing modes: 
+/** Addressing Modes: **/
+
 void cpu::IMM() {
 	u8 immediate = get_byte();
 	instr_arg = immediate;
@@ -405,19 +406,30 @@ void cpu::IDZPY() {
 }
 
 void cpu::REL() {
-	// stub
+	s8 offset = get_byte();
+	u8 low_byte = (u8)m_registers.PC;
+	if(low_byte + offset < 0 || low_byte + offset > 0xFF) cross_page = true;
+	u16 new_address = m_registers.PC + offset;
+	instr_addr = new_address;
+	instr_arg = new_address;
 }
 
 void cpu::IMP() {
-	// stub
+	// Nothing should be here.
 }
 
 void cpu::IDABS() {
-	// stub
+	u8 byte1 = get_byte();
+	u8 byte2 = get_byte();
+	u16 address = (byte2 << 8) | byte1;
+	u8 address_byte1 = get_byte(address);
+	u8 address_byte2 = get_byte(address + 1);
+	instr_addr = (address_byte2 << 8) | address_byte1;
+	instr_arg = instr_addr; 
 }
 
 
-
+/** Instructions: **/
 
 void cpu::BIT() {
 	// Flags: N, V, Z
@@ -429,10 +441,6 @@ void cpu::BIT() {
 }
 
 void cpu::JMP() {
-	// stub
-}
-
-void cpu::JMPABS() {
 	// stub
 }
 
@@ -508,7 +516,7 @@ void cpu::ADC() {
 	m_registers.A = C;
 
 	m_registers.status.N = C < 0 ? 1 : 0;
-	m_registers.status.V = (~(A ^ B))&(A ^ C)&0x80;
+	m_registers.status.V = (~(A ^ B)) & (A ^ C) & 0x80;
 	m_registers.status.Z = C == 0 ? 1 : 0;
 	m_registers.status.C = carry;
 }
@@ -547,7 +555,7 @@ void cpu::SBC() {
 	m_registers.A = C;
 
 	m_registers.status.N = C < 0 ? 1 : 0;
-	m_registers.status.V = (~(A ^ B))&(A ^ C)&0x80;
+	m_registers.status.V = (~(A ^ B)) & (A ^ C) & 0x80;
 	m_registers.status.Z = C == 0 ? 1 : 0;
 	m_registers.status.C = carry;
 }
@@ -670,7 +678,7 @@ void cpu::PLA() {
 }
 
 void cpu::SEI() {
-	// Flags: CI
+	// Flags: I
 	m_registers.status.I = 1;
 }
 
@@ -753,6 +761,7 @@ void cpu::DEX() {
 } 
 
 void cpu::NOP() {
+	// Flags: None
 } 
 
 
