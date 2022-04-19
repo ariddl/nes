@@ -37,8 +37,7 @@ int main(int argc, const char **argv) {
     auto rom = ines::load(argv[1], sz);
     c.init(rom.get(), sz);
 
-    for (size_t i = 0; i < sz/2; ++i)
-        c.execute_next();
+    while (c.execute_next());
 
     dump_cpu(&c, 16, 0x000, 0x100);
 
