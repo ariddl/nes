@@ -290,7 +290,7 @@ void cpu::reset() {
 }
 
 bool cpu::execute_next() {
-	u8 opcode_byte = memory[m_registers.PC];
+	u8 opcode_byte = memory[m_registers.PC++];
 	if (0xffff - m_registers.PC <= opcode_set[opcode_byte].bytes)
 		return false;
 	
@@ -441,7 +441,7 @@ void cpu::BIT() {
 }
 
 void cpu::JMP() {
-	// stub
+	m_registers.PC = instr_arg;
 }
 
 void cpu::STY() {
@@ -561,19 +561,37 @@ void cpu::SBC() {
 }
 
 void cpu::ASL() {
-	// stub
+	u16 tmp = static_cast<u16>(get_byte(instr_arg)) << 1;
+	m_registers.status.C = (tmp >> 8) > 0;
+	m_registers.status.Z = (tmp & 0xff) == 0;
+	m_registers.status.N = tmp & 0x80;
+	store_byte(instr_arg, tmp & 0xff);
 }
 
 void cpu::ROL() {
-	// stub
+	u16 tmp = static_cast<u16>(get_byte(instr_arg)) << 1) | m_registers.status.C;
+	m_registers.status.C = tmp >> 8;
+	m_registers.status.Z = (tmp & 0xff) == 0;
+	m_registers.status.N = tmp & 0x80;
+	store_byte(instr_arg, tmp & 0xff);
 }
 
 void cpu::LSR() {
-	// stub
+	u8 arg = get_byte(instr_arg);
+	m_registers.status.C = arg & 1;
+	arg >>= 1;
+	m_registers.status.Z = (arg & 0xff) == 0;
+	m_registers.status.N = arg & 0x80;
+	store_byte(instr_arg, arg & 0xff);
 }
 
 void cpu::ROR() {
-	// stub
+	u8 arg = get_byte(instr_arg);
+	u16 tmp = static_cast<u16>(m_registers.status.C << 7) | (arg >> 1);
+	m_registers.status.C = arg & 1;
+	m_registers.status.Z = (tmp & 0xff) == 0;
+	m_registers.status.N = tmp & 0x80;
+	store_byte(instr_arg, tmp & 0xff);
 }
 
 void cpu::STX() {
@@ -591,63 +609,87 @@ void cpu::LDX() {
 }
 
 void cpu::DEC() {
-	// stub
+	u8 val = get_byte(instr_arg) - 1; // TODO: wrong type
+	store_byte(instr_arg, val);
+	m_registers.status.Z = m_registers.A == 0;
+	m_registers.status.N = m_registers.A & 0x80;
 }
 
 void cpu::INC() {
-	// stub
+	u8 val = get_byte(instr_arg) + 1; // wrong type
+	store_byte(instr_arg, val);
+	m_registers.status.Z = m_registers.A == 0;
+	m_registers.status.N = m_registers.A & 0x80;
 }
 
 void cpu::BPL() {
-	// stub
+	if (!m_registers.status.N)
+		m_registers.PC = instr_arg;
 }
 
 void cpu::BMI() {
-	// stub
+	if (m_registers.status.N)
+		m_registers.PC = instr_arg;
 }
 
 void cpu::BVC() {
-	// stub
+	if (!m_registers.status.V)
+		m_registers.PC = instr_arg;
 }
 
 void cpu::BVS() {
-	// stub
+	if (m_registers.status.V)
+		m_registers.PC = instr_arg;
 }
 
 void cpu::BCC() {
-	// stub
+	if (!m_registers.status.C)
+		m_registers.PC = instr_arg;
 }
 
 void cpu::BCS() {
-	// stub
+	if (m_registers.status.C)
+		m_registers.PC = instr_arg;
 }
 
 void cpu::BNE() {
-	// stub
+	if (!m_registers.status.Z)
+		m_registers.PC = instr_arg;
 }
 
 void cpu::BEQ() {
-	// stub
+	if (m_registers.status.Z)
+		m_registers.PC = instr_arg;
 }
 
 void cpu::BRK() {
-	// stub
+	m_registers.status.I = 1;
+	push(m_registers.PC >> 8);
+	push(m_registers.PC & 0xff);
+	m_registers.status.B = 1;
+	push(m_registers.status.flags);
+	m_registers.status.B = 0;
+	m_registers.PC = static_cast<u16>(get_byte(0xfffe)) | static_cast<u16>(get_byte(0xffff)) << 8;
 }
 
 void cpu::JSR() {
-	// stub
+	// TODO: Do we need to adjust PC here?
+	push(m_registers.PC >> 8);
+	push(m_registers.PC & 0xff);
+	m_registers.PC = instr_arg;
 }
 
 void cpu::RTI() {
-	// stub
+	m_registers.status.flags = pop();
+	m_registers.PC = static_cast<u16>(pop()) | static_cast<u16>(pop()) << 8;
 }
 
 void cpu::RTS() {
-	// stub
+	m_registers.PC = static_cast<u16>(pop()) | static_cast<u16>(pop()) << 8;
 }
 
 void cpu::PHP() {
-	// stub
+	push(m_registers.status.flags);
 }
 
 void cpu::CLC() {
@@ -656,7 +698,7 @@ void cpu::CLC() {
 }
 
 void cpu::PLP() {
-	// stub
+	m_registers.status.flags = pop();
 }
 
 void cpu::SEC() {
@@ -665,7 +707,7 @@ void cpu::SEC() {
 }
 
 void cpu::PHA() {
-	// stub
+	push(m_registers.A);
 }
 
 void cpu::CLI() {
@@ -674,7 +716,9 @@ void cpu::CLI() {
 }
 
 void cpu::PLA() {
-	// stub
+	m_registers.A = pop();
+	m_registers.status.Z = m_registers.A == 0;
+	m_registers.status.N = m_registers.A & 0x80;
 }
 
 void cpu::SEI() {
@@ -683,7 +727,9 @@ void cpu::SEI() {
 }
 
 void cpu::DEY() {
-	// stub
+	--m_registers.Y;
+	m_registers.status.Z = m_registers.Y == 0;
+	m_registers.status.N = m_registers.Y & 0x80;
 }
 
 void cpu::TYA() {
@@ -708,7 +754,9 @@ void cpu::CLV() {
 }
 
 void cpu::INY() {
-	// stub
+	++m_registers.Y;
+	m_registers.status.Z = m_registers.Y == 0;
+	m_registers.status.N = m_registers.Y & 0x80;
 }
 
 void cpu::CLD() {
@@ -717,7 +765,9 @@ void cpu::CLD() {
 }
 
 void cpu::INX() {
-	// stub
+	++m_registers.X;
+	m_registers.status.Z = m_registers.X == 0;
+	m_registers.status.N = m_registers.X & 0x80;
 }
 
 void cpu::SED() {
@@ -758,7 +808,10 @@ void cpu::TSX() {
 } 
 
 void cpu::DEX() {
-} 
+	--m_registers.X;
+	m_registers.status.Z = m_registers.X == 0;
+	m_registers.status.N = m_registers.X & 0x80;
+}
 
 void cpu::NOP() {
 	// Flags: None
