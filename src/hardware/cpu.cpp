@@ -569,7 +569,7 @@ void cpu::ASL() {
 }
 
 void cpu::ROL() {
-	u16 tmp = static_cast<u16>(get_byte(instr_arg)) << 1) | m_registers.status.C;
+	u16 tmp = static_cast<u16>(get_byte(instr_arg)) << 1 | m_registers.status.C;
 	m_registers.status.C = tmp >> 8;
 	m_registers.status.Z = (tmp & 0xff) == 0;
 	m_registers.status.N = tmp & 0x80;
@@ -666,9 +666,7 @@ void cpu::BRK() {
 	m_registers.status.I = 1;
 	push(m_registers.PC >> 8);
 	push(m_registers.PC & 0xff);
-	m_registers.status.B = 1;
 	push(m_registers.status.flags);
-	m_registers.status.B = 0;
 	m_registers.PC = static_cast<u16>(get_byte(0xfffe)) | static_cast<u16>(get_byte(0xffff)) << 8;
 }
 
