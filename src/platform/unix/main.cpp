@@ -22,7 +22,7 @@ void dump_cpu(cpu *cpu, u32 cols, u32 start, u32 end) {
                 std::cout << (std::getline(ss, reg, ' ') ? (std::string(4, ' ') + reg) : "") << std::endl;
             std::cout << std::setfill('0') << std::setw(4) << i << "  ";
         }
-        std::cout << s32(memory[i]) << ' ';
+        std::cout << std::setfill('0') << std::setw(2) << s32(memory[i]) << ' ';
     }
     std::cout << std::endl << std::dec;
 }
@@ -37,10 +37,9 @@ int main(int argc, const char **argv) {
     auto rom = ines::load(argv[1], sz);
     c.init(rom.get(), sz);
 
-    for (size_t i = 0; i < sz; ++i)
-        c.execute_next();
+    while (c.execute_next());
 
-    dump_cpu(&c, 16, 0, 0x100);
+    dump_cpu(&c, 16, 0x000, 0x100);
 
     return 0;
 }

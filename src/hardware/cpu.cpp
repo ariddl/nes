@@ -297,6 +297,7 @@ void cpu::reset() {
 }
 
 bool cpu::execute_next() {
+	if (memory[m_registers.PC] == 0) return false;
 	u8 opcode_byte = memory[m_registers.PC++];
 	if (0xffff - m_registers.PC <= opcode_set[opcode_byte].bytes)
 		return false;
