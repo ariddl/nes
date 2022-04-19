@@ -1,0 +1,12 @@
+LDA     #01
+ADC     #10
+STA     $0001
+LDA     #01
+ADC     #11
+STA     $0002
+LDA     #01
+ADC     #12
+STA     $0003
+LDA     #01
+ADC     #14
+STA     $0004
