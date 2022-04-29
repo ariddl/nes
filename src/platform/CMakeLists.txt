@@ -1,5 +1,7 @@
-if (WINDOWS)
+if (WIN32)
   add_subdirectory(win)
 elseif(UNIX)
   add_subdirectory(unix)
+else()
+  message(FATAL_ERROR "Unknown platform")
 endif()

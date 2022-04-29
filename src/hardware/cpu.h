@@ -52,7 +52,6 @@ private:
 	// null
 	void BIT();
 	void JMP();
-	void JMPABS();
 	void STY();
 	void LDY();
 	void CPY();
