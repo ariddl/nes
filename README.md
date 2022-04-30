@@ -8,5 +8,8 @@ Read our project proposal here: https://docs.google.com/document/d/1Cqnj8LoFiWsj
 
 ## Quick Start
 
-After cloning, make a `build` directory inside the project root and inside the directory, run: `cmake ..` and then `make` if compiling on Linux. For more information, see: [Project Setup](https://github.com/ariddl/nes/wiki/Project-Setup). For a list of features we still need, see: [Planned Features](https://github.com/ariddl/nes/wiki/Planned-Features).
+After cloning, make a `build` directory inside the project root and inside the directory, run: `cmake ..` and then `make` if compiling on Linux. 
+
+For more information, see: [Project Setup](https://github.com/ariddl/nes/wiki/Project-Setup).
+For a list of features we still need, see: [Planned Features](https://github.com/ariddl/nes/wiki/Planned-Features).
 
