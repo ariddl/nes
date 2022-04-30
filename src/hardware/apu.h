@@ -6,6 +6,8 @@ class apu {
 public:
     apu(system *sys);
 
+    void init();
+
 private:
     system *m_system;
 };

@@ -1,62 +1,17 @@
 #include "instructions.h"
 
 void instructions::init_table(cpu::opcode *tab) {
-    BRK(tab);
-    ORA(tab);
-    ASL(tab);
-    PHP(tab);
-    BPL(tab);
-    CLC(tab);
-    JSR(tab);
-    AND(tab);
-    BIT(tab);
-    ROL(tab);
-    PLP(tab);
-    BMI(tab);
-    SEC(tab);
-    RTI(tab);
-    EOR(tab);
-    LSR(tab);
-    PHA(tab);
-    JMP(tab);
-    BVC(tab);
-    CLI(tab);
-    RTS(tab);
-    ADC(tab);
-    ROR(tab);
-    PLA(tab);
-    BVS(tab);
-    SEI(tab);
-    STA(tab);
-    STY(tab);
-    STX(tab);
-    DEY(tab);
-    TXA(tab);
-    BCC(tab);
-    TYA(tab);
-    TXS(tab);
-    LDY(tab);
-    LDA(tab);
-    LDX(tab);
-    TAY(tab);
-    TAX(tab);
-    BCS(tab);
-    CLV(tab);
-    TSX(tab);
-    CPY(tab);
-    CMP(tab);
-    DEC(tab);
-    INY(tab);
-    DEX(tab);
-    BNE(tab);
-    CLD(tab);
-    CPX(tab);
-    SBC(tab);
-    INC(tab);
-    INX(tab);
-    NOP(tab);
-    BEQ(tab);
-    SED(tab);
+    // Fill the table with each type of instruction with all addressing modes:
+    BRK(tab); ORA(tab); ASL(tab); PHP(tab); BPL(tab); CLC(tab);
+    JSR(tab); AND(tab); BIT(tab); ROL(tab); PLP(tab); BMI(tab);
+    SEC(tab); RTI(tab); EOR(tab); LSR(tab); PHA(tab); JMP(tab);
+    BVC(tab); CLI(tab); RTS(tab); ADC(tab); ROR(tab); PLA(tab);
+    BVS(tab); SEI(tab); STA(tab); STY(tab); STX(tab); DEY(tab);
+    TXA(tab); BCC(tab); TYA(tab); TXS(tab); LDY(tab); LDA(tab);
+    LDX(tab); TAY(tab); TAX(tab); BCS(tab); CLV(tab); TSX(tab);
+    CPY(tab); CMP(tab); DEC(tab); INY(tab); DEX(tab); BNE(tab);
+    CLD(tab); CPX(tab); SBC(tab); INC(tab); INX(tab); NOP(tab);
+    BEQ(tab); SED(tab);
 }
 
 void instructions::BRK(cpu::opcode *tab) {

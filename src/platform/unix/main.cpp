@@ -31,16 +31,21 @@ int main(int argc, const char **argv) {
     if (argc < 2)
         return 1;
 
+    // Load sample rom.
     size_t sz;
     auto rom = ines::load(argv[1], sz);
 
+    // Setup test system.
     nes_system s;
     s.init(rom.get(), sz);
     cpu *c = s.get_cpu();
     mem *m = s.get_mem();
 
+    // For testing:
+    // Execute instructions until we get to an empty instruction
     while (c->execute_next());
 
+    // Dump CPU stats now that instructions have executed:
     dump_cpu(c, m, 16, 0x0, 0x100);
 
     return 0;

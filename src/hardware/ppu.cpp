@@ -3,5 +3,7 @@
 
 ppu::ppu(system *sys)
     : m_system(sys) {
-    
+}
+
+void ppu::init() {
 }

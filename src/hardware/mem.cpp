@@ -1,4 +1,5 @@
 #include "mem.h"
+#include <cstdio>
 
 mem::mem()
     : m_memory(nullptr)
@@ -9,6 +10,7 @@ mem::~mem() {
 }
 
 void mem::init(const u8 *mem, size_t sz) {
+    // Reset memory.
     delete[] m_memory;
     m_memory = new u8[0xffff];
 	memcpy(m_memory + 0x2000, mem, sz);
