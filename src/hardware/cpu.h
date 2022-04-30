@@ -6,6 +6,7 @@
 
 class system;
 class cpu {
+	friend class instructions;
 	using instruction_handler = void (cpu::*)();
 	using addrmode_handler = void (cpu::*)();
 	static constexpr size_t memory_size = 32768;
@@ -134,7 +135,6 @@ private:
 	u8 pop() { return memory[0x100 + ++m_registers.S]; }
 
 	opcode opcode_set[256];
-	void setup();
 
 	struct {
 		// Accumulator

@@ -7,4 +7,6 @@ target_sources(${PROJECT_NAME} PRIVATE
   apu.cpp
   system.h
   system.cpp
+  instructions.cpp
+  instructions.h
 )
