@@ -1,0 +1,10 @@
+lda #1
+pha
+lda #2
+pha
+lda #5
+pha
+pla
+tax
+lda #3
+pha

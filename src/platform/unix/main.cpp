@@ -8,7 +8,7 @@ void dump_cpu(cpu *cpu, mem *m, u32 cols, u32 start, u32 end) {
     const auto r = cpu->get_registers();
     std::stringstream ss;
     ss << std::hex << "Registers: A=" << (s32)r.A << " X=" << (s32)r.X << " Y=" << (s32)r.Y
-        << " PC=" << (s32)r.PC << " S=" << (s32)r.PC << ' ';
+        << " PC=" << (s32)r.PC << " S=" << (s32)r.S << ' ';
     ss << "Status(Flags=" << (s32)r.status.flags << "): N=" << (s32)r.status.N << " V=" << (s32)r.status.V
         << " D=" << (s32)r.status.D << " I=" << (s32)r.status.I << " Z=" << (s32)r.status.Z 
         << " C=" << (s32)r.status.C;
@@ -41,7 +41,7 @@ int main(int argc, const char **argv) {
 
     while (c->execute_next());
 
-    dump_cpu(c, m, 16, 0, 0x100);
+    dump_cpu(c, m, 16, 0x0, 0x100);
 
     return 0;
 }
