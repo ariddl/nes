@@ -1,31 +1,24 @@
 #include "cpu.h"
 #include "instructions.h"
 #include "system.h"
-#include <cstring>
+#include "mem.h"
 #include <cstdio>
 
-cpu::cpu(system *sys) 
+cpu::cpu(system *sys)
     : m_registers{}
 	, m_system(sys)
 	, instr_arg(0)
 	, cross_page(false)
 	, branch(false)
-	, memory{}
-	, memory_map{} {
+	, m_mem(*sys->get_mem()) {
 	instructions::init_table(opcode_set);
-	reset();
 }
 
 cpu::~cpu() {
-	delete[] memory;
 }
 
-void cpu::init(const u8 *mem, size_t sz) {
-	memcpy(memory + 0x2000, mem, sz);
-	m_registers.PC = 0x2000;
-}
-
-void cpu::reset() {
+void cpu::init() {
+	// This will be called on reset.
 	// We need the reset vector to start executing instructions.
 	// Note that the PPU is needed for any games to run instructions
 	// since the game will wait for the PPU to be ready first.
@@ -33,22 +26,22 @@ void cpu::reset() {
 	// When the CPU boots up, it reads the Reset vector, located at FFFC. 
 	// That contains a 16-bit value which tells the CPU where to jump to.
     m_registers.S = stack_size - 1; // $FF
-	delete[] memory;
-	memory = new u8[0xffff];
+	m_registers.PC = 0x2000;
 }
 
 bool cpu::execute_next() {
-	if (memory[m_registers.PC] == 0) {printf("\n");return false;}
-	u8 opcode_byte = memory[m_registers.PC++];
-	if (0xffff - m_registers.PC <= opcode_set[opcode_byte].bytes)
+	if (m_mem.read(m_registers.PC) == 0) {printf("\n");return false;}
+	
+	u8 opcode_byte = get_byte();
+	const opcode &o = opcode_set[opcode_byte];
+	if (0xffff - m_registers.PC <= o.bytes)
 		return false;
 	
-	const opcode &o = opcode_set[opcode_byte];
-	cross_page = false; branch = false;
+	cross_page = branch = false;
 	(this->*o.addr_handler)();
 	(this->*o.instr_handler)();
 	printf("%s ", o.name);
-	total_cycles += opcode_set[opcode_byte].cycles + cross_page + branch;
+	total_cycles += o.cycles + cross_page + branch;
 	return true;
 }
 
@@ -563,16 +556,13 @@ void cpu::DEX() {
 
 void cpu::NOP() {
 	// Flags: None
-} 
-
-
-
-void cpu::store_byte(u16 address, u8 byte) {
-	memory[address] = byte;
 }
 
-u8 cpu::get_byte(u16 address) const {
-	// TODO: Instead of having bounds checking here, let's add a
-	// new field to our instruction table with minimum number of bytes
-	return memory[address];
-}
+/* Bus */
+void cpu::store_byte(u16 address, u8 byte) { m_mem.write(address, byte); }
+u8 cpu::get_byte(u16 address) const { return m_mem.read(address); }
+u8 cpu::get_byte() { return m_mem.read(m_registers.PC++); }
+
+/* Stack */
+void cpu::push(u8 b) { m_mem.write(0x100 + m_registers.S--, b); }
+u8 cpu::pop() { return m_mem.read(0x100 + m_registers.S++); }

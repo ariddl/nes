@@ -4,7 +4,7 @@
 #include <iomanip>
 #include <string>
 
-void dump_cpu(cpu *cpu, u32 cols, u32 start, u32 end) {
+void dump_cpu(cpu *cpu, mem *m, u32 cols, u32 start, u32 end) {
     const auto r = cpu->get_registers();
     std::stringstream ss;
     ss << std::hex << "Registers: A=" << (s32)r.A << " X=" << (s32)r.X << " Y=" << (s32)r.Y
@@ -14,7 +14,7 @@ void dump_cpu(cpu *cpu, u32 cols, u32 start, u32 end) {
         << " C=" << (s32)r.status.C;
     std::string reg;
 
-    const u8 *memory = cpu->get_mem();
+    const u8 *memory = m->get_mem();
     std::cout << std::hex;
     for (u32 i = start; i < end; ++i) {
         if (i % cols == 0) {
@@ -31,15 +31,17 @@ int main(int argc, const char **argv) {
     if (argc < 2)
         return 1;
 
-    cpu c(nullptr);
-
     size_t sz;
     auto rom = ines::load(argv[1], sz);
-    c.init(rom.get(), sz);
 
-    while (c.execute_next());
+    nes_system s;
+    s.init(rom.get(), sz);
+    cpu *c = s.get_cpu();
+    mem *m = s.get_mem();
 
-    dump_cpu(&c, 16, 0x000, 0x100);
+    while (c->execute_next());
+
+    dump_cpu(c, m, 16, 0, 0x100);
 
     return 0;
 }

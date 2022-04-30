@@ -5,6 +5,7 @@
 #include <vector> // temp
 
 class system;
+class mem;
 class cpu {
 	friend class instructions;
 	using instruction_handler = void (cpu::*)();
@@ -26,15 +27,12 @@ public:
 	cpu(system *sys);
 	~cpu();
 	
-	void init(const u8 *mem, size_t sz);
+	void init();
 
 	const auto get_registers() const { return m_registers; }
-	const u8 *get_mem() const { return memory; }
 
 	bool execute_next();
 private:
-	void reset();
-
 	void IMM();
 	void ZP();
 	void ABS();
@@ -125,14 +123,13 @@ private:
 	void DEX(); // 0xCA
 	void NOP(); // 0xEA
 
-	/* -- Need to implement please -- */
 	void store_byte(u16 address, u8 byte);
 
-	u8 get_byte(u16 address) const; // return byte from address
-	u8 get_byte() { return get_byte(m_registers.PC++); }
+	u8 get_byte(u16 address) const;
+	u8 get_byte();
 
-	void push(u8 b) { memory[0x100 + m_registers.S--] = b; }
-	u8 pop() { return memory[0x100 + ++m_registers.S]; }
+	void push(u8 b);
+	u8 pop();
 
 	opcode opcode_set[256];
 
@@ -165,36 +162,10 @@ private:
 	u16 instr_addr; // Used in addressing modes. Needed for store instruction. 9
 	bool cross_page; // True if address crosses page.
 	bool branch; // True if branch taken. 
-	u64 total_cycles; // 
-
-	/*
-		0000-07FF is RAM, 0800-1FFF are mirrors of RAM (you AND the address with
-		07FF to get the effective address)
-
-		2000-2007 is how the CPU writes to the PPU, 2008-3FFF are mirrors of
-		that address range.
-
-		4000-401F is for IO ports and sound
-
-		4020-4FFF is rarely used, but can be used by some cartridges
-
-		5000-5FFF is rarely used, but can be used by some cartridges, often as
-		bank switching registers, not actual memory, but some cartridges put RAM
-		there
-
-		6000-7FFF is often cartridge WRAM. Since emulators usually emulate this
-		whether it actually exists in the cartridge or not, there's a little bit
-		of controversy about NES headers not adequately representing a
-		cartridge.
-
-		8000-FFFF is the main area the cartridge ROM is mapped to in memory.
-		Sometimes it can be bank switched, usually in 32k, 16k, or 8k sized
-		banks.
-	*/
-	u8 *memory;
-	u8 *memory_map[256];
+	u64 total_cycles;
 
 	system *m_system;
+	mem &m_mem;
 };
 
 #endif

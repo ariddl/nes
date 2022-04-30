@@ -9,4 +9,6 @@ target_sources(${PROJECT_NAME} PRIVATE
   system.cpp
   instructions.cpp
   instructions.h
+  mem.h
+  mem.cpp
 )

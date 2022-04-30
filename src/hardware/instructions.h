@@ -1,7 +1,7 @@
 #pragma once
 #include "cpu.h"
 
-class instructions
+class instructions final
 {
 public:
     instructions() = delete;
