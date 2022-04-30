@@ -123,11 +123,13 @@ private:
 	void DEX(); // 0xCA
 	void NOP(); // 0xEA
 
-	void store_byte(u16 address, u8 byte);
+	/* Bus */
+	void write(u16 address, u8 byte);
+	u8 read(u8 lo, u8 hi) const;
+	u8 read(u16 address) const;
+	u8 read();
 
-	u8 get_byte(u16 address) const;
-	u8 get_byte();
-
+	/* Stack */
 	void push(u8 b);
 	u8 pop();
 
